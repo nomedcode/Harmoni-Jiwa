@@ -1,0 +1,65 @@
+.section { padding: var(--sec-pad) 0; }
+.head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+.head h2 { font-size: clamp(26px, 3.6vw, 36px); letter-spacing: -.02em; }
+.dim { color: #6f8279; font-weight: 300; }
+
+.bento {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 190px;
+  gap: var(--gap);
+  margin-bottom: var(--gap);
+}
+.bentoSecondary { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 170px; }
+
+.card {
+  border-radius: var(--radius-md);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+  background: var(--sage-pale);
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(25, 59, 58, .12); }
+.card h3 { font-size: clamp(18px, 2vw, 21px); letter-spacing: -.01em; margin-bottom: 6px; }
+.sub { font: 13px/1.6 var(--font-sans); color: var(--muted); max-width: 280px; }
+
+.arrow {
+  align-self: flex-end;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: transform .18s ease;
+}
+.card:hover .arrow { transform: translate(2px, -2px); }
+.arrowAccent { background: var(--coral); color: var(--paper); }
+
+.cardTall { grid-row: span 1; background: var(--ink); color: var(--paper); }
+.cardTall .sub { color: var(--on-dark); }
+.cardDark { background: var(--ink); color: var(--paper); }
+.cardDark .sub { color: var(--on-dark); }
+.cardSage { background: var(--sage); color: var(--ink); }
+.cardOutline { background: var(--paper); color: var(--ink); border: 1px solid var(--border); }
+
+@media (max-width: 960px) {
+  .bento { grid-template-columns: repeat(2, 1fr); }
+  .bentoSecondary { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 720px) {
+  .bentoSecondary { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .bento { grid-template-columns: 1fr; }
+  .cardTall { grid-row: auto; }
+}

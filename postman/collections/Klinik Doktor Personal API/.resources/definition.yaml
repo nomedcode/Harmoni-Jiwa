@@ -1,0 +1,10 @@
+$kind: collection
+description: Contract API v1 untuk auth sync, appointment, dan queue. Semua endpoint memerlukan Supabase access token. Queue memerlukan role admin/staff.
+variables:
+  base_url: http://127.0.0.1:8000/api/v1
+auth:
+  - id: ffe55ffb-86eb-42cb-8b6d-408cbbbd94a0
+    type: bearer
+    name: bearer auth
+    credentials:
+      token: "{{access_token}}"

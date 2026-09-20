@@ -1,0 +1,37 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(25, 59, 58, .5);
+  overflow-y: auto;
+}
+.modal {
+  position: relative;
+  width: min(100%, 430px);
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 38px;
+  background: var(--paper);
+  border-radius: var(--radius-md);
+  box-shadow: 0 20px 70px rgba(25, 59, 58, .2);
+}
+.modal h2 { margin-bottom: 26px; font-size: 38px; line-height: .98; letter-spacing: -.03em; }
+.close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+  padding: 4px 8px;
+}
+.switch { display: block; margin: 16px auto 0; }

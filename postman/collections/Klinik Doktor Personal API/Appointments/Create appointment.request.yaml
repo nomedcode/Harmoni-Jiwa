@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{base_url}}/staff/appointments"
+method: GET
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: ""
+scripts:
+  - type: afterResponse
+    code: |
+      pm.test('status is 200', function () {
+          pm.response.to.have.status(200);
+      });
+settings:
+  followRedirects: false
+  followOriginalHttpMethod: true

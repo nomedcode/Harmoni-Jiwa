@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{base_url}}/auth/sync"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "full_name": "Budi Santoso",
+      "gender": "M",
+      "phone_number": "081234567890"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200 or 201', function () { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });
+      pm.test('response contains data', function () { pm.expect(pm.response.json()).to.have.property('data'); });
+order: 1000

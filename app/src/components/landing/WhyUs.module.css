@@ -1,0 +1,48 @@
+.section { padding: var(--sec-pad) 0; border-top: 1px solid var(--border); }
+.grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 4vw, 48px);
+  flex-wrap: wrap;
+}
+.col {
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  min-width: 220px;
+}
+.badge {
+  display: block;
+  margin-bottom: 6px;
+  font: 11px var(--font-sans);
+  color: var(--coral-text);
+  letter-spacing: .08em;
+}
+.item h3 { font-size: 20px; margin-bottom: 8px; }
+.item p { color: var(--muted); font: 14px/1.6 var(--font-sans); }
+.center { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
+.rings {
+  position: relative;
+  width: 210px;
+  height: 210px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.rings::before, .rings::after {
+  content: "";
+  position: absolute;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+}
+.rings::before { inset: 0; }
+.rings::after { inset: 32px; }
+.rings h2 { font-size: clamp(20px, 2.6vw, 26px); position: relative; z-index: 1; text-align: center; }
+
+@media (max-width: 720px) {
+  .grid { flex-direction: column; }
+  .center { order: -1; }
+}

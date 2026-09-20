@@ -1,0 +1,13 @@
+name: Klinik Personal - Local
+values:
+  - key: base_url
+    value: 'http://127.0.0.1:8000/api/v1'
+  # Paste a short-lived Supabase access_token from an active browser session.
+  # Never commit a real token: copy this file to
+  # "Klinik Personal - Local.environment.yaml" (git-ignored) and fill it there.
+  - key: access_token
+    value: ''
+  - key: employee_id
+    value: '1'
+  - key: appointment_id
+    value: ''

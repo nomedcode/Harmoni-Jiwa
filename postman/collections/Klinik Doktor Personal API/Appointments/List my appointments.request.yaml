@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{base_url}}/appointments"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200', function () { pm.response.to.have.status(200); });
+      pm.test('response is paginated', function () { pm.expect(pm.response.json()).to.have.property('data'); });
+order: 2000

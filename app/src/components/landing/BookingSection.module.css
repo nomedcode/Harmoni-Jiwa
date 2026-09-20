@@ -1,0 +1,78 @@
+.section { padding: var(--sec-pad) 0; border-top: 1px solid var(--border); }
+.section h2 { font-size: clamp(26px, 3.6vw, 36px); margin-bottom: 28px; }
+.grid {
+  display: grid;
+  grid-template-columns: .85fr 1.15fr;
+  gap: var(--gap);
+  align-items: stretch;
+}
+
+.hoursCard {
+  background: var(--sage-pale);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+}
+.hoursHead { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; }
+.hoursHead h3 { font-size: 19px; }
+.openBadge {
+  background: var(--coral-text);
+  color: var(--paper);
+  border-radius: var(--radius-full);
+  padding: 5px 13px;
+  font: 11px var(--font-sans);
+}
+.hoursRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  font: 14px var(--font-sans);
+}
+.hoursRow:first-of-type { border-top: none; }
+.hoursCard dl { margin: 0; }
+.hoursRow dd { margin: 0; }
+.hoursTime { color: var(--muted); }
+
+.formCard { padding: 36px; background: var(--sage-pale); border-radius: var(--radius-lg); }
+.formHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 26px;
+  color: var(--coral-text);
+  font: 11px var(--font-sans);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.formHeader strong { color: var(--ink); font-weight: 400; }
+.formRow { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.consent {
+  display: flex;
+  align-items: start;
+  gap: 9px;
+  margin: 18px 0 26px;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+.consent input { accent-color: var(--coral-text); margin-top: 3px; }
+
+.success { min-height: 340px; display: grid; place-content: center; text-align: center; }
+.successIcon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: var(--coral);
+  color: var(--paper);
+  font: 20px var(--font-sans);
+}
+.success h3 { font-size: 26px; margin-bottom: 10px; }
+.success p { max-width: 300px; margin: 0 auto; color: var(--muted); font: 13px/1.6 var(--font-sans); }
+
+@media (max-width: 960px) {
+  .grid { grid-template-columns: 1fr; }
+}

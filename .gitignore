@@ -1,0 +1,43 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Postman environments hold live bearer tokens; commit the example instead.
+postman/environments/*.environment.yaml
+!postman/environments/*.example.yaml
+
+# Database dumps may contain patient PII.
+*.dump/
+*.sql
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+app/.vercel/
+
+# PHP / Laravel
+backend/vendor/
+backend/storage/*.key
+backend/storage/logs/*.log
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/bootstrap/cache/*.php
+backend/database/*.sqlite
+
+# OS and editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Test and build artifacts
+.phpunit.result.cache
+coverage/
+
+# markdown (keep README.md files tracked; exclude internal/AI-agent docs)
+PRD.md
+postman/documents/API-CONTRACT.md

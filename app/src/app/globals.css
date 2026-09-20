@@ -1,0 +1,224 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Design tokens, element base styles and cross-section primitives.
+   Section-specific rules live in colocated *.module.css files.
+   ========================================================================== */
+
+:root {
+  --ink: #193b3a;
+  --ink-2: #14302f;
+  --muted: #4f655c;
+  --paper: #fcfaf5;
+  /* Decorative coral for shapes and fills. */
+  --coral: #e8755f;
+  /* Accessible coral for text and for fills that carry text. */
+  --coral-text: #b44831;
+  --coral-dark: #9c3a26;
+  --sage: #d9e5dc;
+  --sage-pale: #e6eee6;
+  --border: #dce3dc;
+  --on-dark: #b6cbc2;
+  --danger: #a8402f;
+  --radius-lg: 28px;
+  --radius-md: 20px;
+  --radius-full: 999px;
+  --maxw: 1180px;
+  --pad: clamp(20px, 5vw, 32px);
+  --sec-pad: clamp(56px, 9vw, 120px);
+  --gap: clamp(14px, 2vw, 18px);
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-sans: Arial, Helvetica, sans-serif;
+  --header-h: 84px;
+}
+
+* { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 16px);
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button, input, select { font: inherit; }
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+p { margin: 0; line-height: 1.6; }
+
+/* Keyboard focus must stay visible on every interactive element. */
+:focus-visible {
+  outline: 2px solid var(--coral-text);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Honour the operating system motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- LAYOUT ---------- */
+.wrap {
+  width: min(var(--maxw), calc(100% - 64px));
+  margin: 0 auto;
+}
+
+@media (max-width: 720px) {
+  .wrap { width: min(var(--maxw), calc(100% - 40px)); }
+}
+
+/* ---------- ACCESSIBILITY HELPERS ---------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 300;
+  padding: 12px 18px;
+  border-radius: var(--radius-full);
+  background: var(--ink);
+  color: var(--paper);
+  font: 12px var(--font-sans);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  transform: translateY(-200%);
+  transition: transform .18s ease;
+}
+.skip-link:focus-visible { transform: translateY(0); }
+
+/* ---------- TEXT PRIMITIVES ---------- */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 20px;
+  color: var(--coral-text);
+  font: 11px var(--font-sans);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.eyebrow span { width: 24px; height: 1px; background: var(--coral-text); }
+.eyebrow-plain {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--coral-text);
+  font: 11px var(--font-sans);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+/* ---------- BUTTON PRIMITIVES ---------- */
+.primary-button, .secondary-button, .header-cta {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 13px 20px;
+  border-radius: var(--radius-full);
+  font: 12px var(--font-sans);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: transform .18s ease, background .18s ease, color .18s ease;
+}
+.primary-button, .header-cta { background: var(--ink); color: var(--paper); }
+.primary-button:not(:disabled):hover, .header-cta:not(:disabled):hover { background: var(--coral-text); transform: translateY(-2px); }
+.primary-button:disabled, .secondary-button:disabled, .header-cta:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+  transform: none;
+}
+.primary-button span, .header-cta span { font-size: 15px; }
+.secondary-button { background: transparent; color: var(--ink); border-color: var(--border); }
+.secondary-button:not(:disabled):hover { background: var(--sage-pale); }
+.text-button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  padding: 8px 0;
+  margin-top: 14px;
+  background: transparent;
+  color: var(--coral-text);
+  cursor: pointer;
+  font: 12px var(--font-sans);
+}
+
+/* ---------- BRAND ---------- */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  line-height: .82;
+  letter-spacing: .04em;
+  text-transform: lowercase;
+}
+.brand em { color: var(--coral-text); font-style: normal; }
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  font: 11px var(--font-sans);
+  letter-spacing: -.08em;
+  flex-shrink: 0;
+}
+
+/* ---------- FORM BASE ---------- */
+label {
+  display: block;
+  margin-bottom: 17px;
+  color: var(--muted);
+  font: 10px var(--font-sans);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+input:not([type="checkbox"]), select {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 8px;
+  padding: 13px 0;
+  border: 0;
+  border-bottom: 1px solid #93a89b;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font: 16px var(--font-serif);
+}
+input:focus, select:focus { border-color: var(--coral-text); }
+.form-submit { border: 0; cursor: pointer; width: 100%; justify-content: center; }
+.form-error { margin: 8px 0 18px; color: var(--danger); font: 12px/1.5 var(--font-sans); }
+.form-hint { margin: 8px 0 18px; color: var(--muted); font: 12px/1.5 var(--font-sans); }
+.form-note { margin: 8px 0 18px; color: var(--ink); font: 12px/1.5 var(--font-sans); }
