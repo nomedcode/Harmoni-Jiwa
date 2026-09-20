@@ -64,19 +64,6 @@ php artisan serve --host=127.0.0.1 --port=8000   # http://127.0.0.1:8000
 
 Environment variables, role setup, and seeders are documented in `app/README.md` and `backend/README.md`.
 
-## Deployment Checklist (Proxmox)
-
-1. Run PostgreSQL on a separate LXC/VM from the backend service.
-2. Provision an LXC/VM (or container runtime, per ops decision) for the Laravel API.
-3. Restrict PostgreSQL to accept connections from the backend only.
-4. Place an HTTPS reverse proxy in front of Laravel.
-5. Secure the reverse proxy ↔ backend connection if the service should not be exposed directly to the internet.
-6. Back up the database before running migrations in production.
-7. Seed psychiatrist/staff data through an admin seeder or a protected internal endpoint.
-8. Schedule periodic PostgreSQL backups and test the restore process.
-9. Set up logging, health checks, rate limiting, and alerting.
-10. Set `APP_DEBUG=false` in the production environment.
-
 ## Security
 
 Never commit `.env`, `.env.local`, passwords, JWT secrets, Supabase service-role keys, or any private key. All environment templates are provided as `.env.*.example` files.
