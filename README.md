@@ -1,4 +1,5 @@
 # Harmoni Jiwa
+<img width="926" height="385" alt="image" src="https://github.com/user-attachments/assets/40b033d4-a41d-4dd2-b955-ae1b07ef35ed" />
 
 Appointment booking platform for psychiatric consultations. Monorepo containing a Next.js frontend and a Laravel REST API backend.
 
