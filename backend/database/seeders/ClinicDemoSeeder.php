@@ -18,11 +18,15 @@ use Illuminate\Support\Carbon;
  * "John Doe N" and each patient owns exactly one appointment, so the staff
  * table shows every name once with a unique status: six patients cover the
  * six appointment statuses. Demo doctors mirror the staff shown on the
- * patient landing page (site.ts `doctor`). The two Supabase users below
- * carry the supabase_uid of the local demo accounts (karyawan@harmoni.test
- * and pasien@harmoni.test), so logging in through the frontend lands on
- * pre-populated data. Synthetic accounts (seed-*) exist so the staff
- * dashboard shows data from more than one patient.
+ * patient landing page (site.ts `doctor`).
+ *
+ * The karyawan and pasien rows bind to the supabase_uid of the local demo
+ * accounts (karyawan@harmoni.test and pasien@harmoni.test), so logging in
+ * through the frontend lands on pre-populated data. demoUid() resolves
+ * those ids from database/seeders/demo-user-ids.json, which
+ * scripts/supabase_demo_users.py writes on each machine. Synthetic
+ * accounts (seed-*) exist so the staff dashboard shows data from more
+ * than one patient.
  *
  * Service types match the booking form options (landing.ts
  * `bookingServices`). Queues only exist for active (upcoming / today)
@@ -32,6 +36,27 @@ use Illuminate\Support\Carbon;
  */
 class ClinicDemoSeeder extends Seeder
 {
+    /**
+     * Resolve the supabase_uid of a demo auth account.
+     *
+     * scripts/supabase_demo_users.py records the ids it creates or syncs in
+     * demo-user-ids.json (machine-specific and gitignored). The fallbacks
+     * keep the seeder working when that file has not been generated yet.
+     */
+    public function demoUid(string $role, string $fallback): string
+    {
+        $path = database_path('seeders/demo-user-ids.json');
+        if (is_file($path)) {
+            $ids = json_decode((string) file_get_contents($path), true);
+            $uid = is_array($ids) ? ($ids[$role] ?? null) : null;
+            if (is_string($uid) && preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $uid)) {
+                return $uid;
+            }
+        }
+
+        return $fallback;
+    }
+
     public function run(): void
     {
         $johnDoe = Employee::updateOrCreate(
@@ -40,11 +65,11 @@ class ClinicDemoSeeder extends Seeder
         );
 
         $karyawanUser = User::updateOrCreate(
-            ['supabase_uid' => '1419754f-cd95-41db-8d09-f350fabf94ac'],
+            ['supabase_uid' => $this->demoUid('karyawan', '1419754f-cd95-41db-8d09-f350fabf94ac')],
             ['full_name' => 'Admin Karyawan', 'gender' => 'M', 'phone_number' => '081200000001', 'role' => 'karyawan'],
         );
         $john1User = User::updateOrCreate(
-            ['supabase_uid' => '96f898bf-a2dd-41dc-bfe5-ea76ceb12789'],
+            ['supabase_uid' => $this->demoUid('patient', '96f898bf-a2dd-41dc-bfe5-ea76ceb12789')],
             ['full_name' => 'John Doe 1', 'gender' => 'M', 'phone_number' => '081200000002', 'role' => 'patient'],
         );
         // Preserves the original DatabaseSeeder intent (legacy demo staff).

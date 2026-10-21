@@ -1,0 +1,100 @@
+# Local demo stack: frontend + backend + database.
+#
+# Supabase Auth is intentionally NOT part of Compose. It keeps running on
+# the host through the Supabase CLI (supabase/): the browser talks to it
+# directly at http://127.0.0.1:54321, and the backend fetches its JWKS from
+# the same stack via host.docker.internal (see the backend environment).
+
+services:
+  frontend:
+    build:
+      context: ./app
+      args:
+        # NEXT_PUBLIC_* values are baked into the bundle at build time.
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:-http://127.0.0.1:54321}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: "${NEXT_PUBLIC_SUPABASE_ANON_KEY:?NEXT_PUBLIC_SUPABASE_ANON_KEY is required - copy the sb_publishable key from supabase status into .env}"
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://127.0.0.1:8080/api/v1}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+    container_name: harmoni-frontend
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:3000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: harmoni-backend
+    ports:
+      - "8080:8080"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      # Demo-only fallback. Override APP_KEY in .env for anything real.
+      APP_KEY: "${APP_KEY:-base64:fB5rJw2soDjl10ac5DqWBdRBw20c6452mgc486UqHiE=}"
+      APP_URL: http://127.0.0.1:8080
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_DATABASE: ${POSTGRES_DB:-klinik_personal}
+      DB_USERNAME: ${POSTGRES_USER:-postgres}
+      # Local demo credentials only; override through .env elsewhere.
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      # The issuer check compares the token's "iss" with <SUPABASE_URL>/auth/v1.
+      # Tokens minted on the host carry iss=http://127.0.0.1:54321/auth/v1, so
+      # SUPABASE_URL must keep the host form even inside the container. The
+      # JWKS fetch needs a network-reachable URL, hence the override below.
+      SUPABASE_URL: ${SUPABASE_URL:-http://127.0.0.1:54321}
+      SUPABASE_JWKS_URL: ${SUPABASE_JWKS_URL:-http://host.docker.internal:54321/auth/v1/.well-known/jwks.json}
+      SUPABASE_JWT_ISSUER: ${SUPABASE_JWT_ISSUER:-}
+      FRONTEND_URLS: ${FRONTEND_URLS:-http://localhost:3000,http://127.0.0.1:3000}
+      API_RATE_LIMIT_PER_MINUTE: ${API_RATE_LIMIT_PER_MINUTE:-60}
+      API_RATE_LIMIT_APPOINTMENTS_PER_HOUR: ${API_RATE_LIMIT_APPOINTMENTS_PER_HOUR:-10}
+      SESSION_DRIVER: array
+      CACHE_STORE: database
+      LOG_LEVEL: debug
+    volumes:
+      # demo-user-ids.json is written on the host by
+      # scripts/supabase_demo_users.py (machine-specific, gitignored).
+      # Mounting the seeders directory lets the in-container seeder read it
+      # without rebuilding the image.
+      - ./backend/database/seeders:/var/www/html/database/seeders:ro
+    # Linux engines need this to reach the host (Docker Desktop provides
+    # host.docker.internal by itself; host-gateway is harmless there).
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1:8080/up') !== false ? 0 : 1);"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: harmoni-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-klinik_personal}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      # Named volume: demo data survives `docker compose down` and container
+      # recreation; only `docker compose down -v` erases it.
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-klinik_personal}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  db-data:

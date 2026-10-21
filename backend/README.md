@@ -26,7 +26,7 @@ php artisan serve --host=127.0.0.1 --port=8000
 3. Copy `.env.postgres.example` to `.env`, then fill in `DB_PASSWORD`.
 4. Run `php artisan migrate --seed`.
 
-The root README walks through the full local stack, including Supabase Auth; `scripts/supabase_demo_users.py` creates the demo accounts.
+The root README walks through the full local stack, including Supabase Auth; `scripts/supabase_demo_users.py` creates the demo accounts and records their Supabase ids in `database/seeders/demo-user-ids.json`, which `ClinicDemoSeeder` reads (with a built-in fallback) when binding demo rows to those accounts.
 
 ## Authentication
 

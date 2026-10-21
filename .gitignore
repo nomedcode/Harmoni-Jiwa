@@ -28,6 +28,9 @@ backend/storage/framework/views/*
 backend/bootstrap/cache/*.php
 backend/database/*.sqlite
 
+# Machine-specific Supabase ids recorded by scripts/supabase_demo_users.py
+backend/database/seeders/demo-user-ids.json
+
 # OS and editor
 .DS_Store
 Thumbs.db

@@ -1,0 +1,11 @@
+# Keep the build context lean and keep local env files out of the image;
+# runtime configuration arrives as build args instead.
+node_modules
+.next
+out
+.vercel
+.git
+.env*
+coverage
+Dockerfile
+.dockerignore

@@ -9,4 +9,5 @@ storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
 database/*.sqlite
+database/seeders/demo-user-ids.json
 .git/
