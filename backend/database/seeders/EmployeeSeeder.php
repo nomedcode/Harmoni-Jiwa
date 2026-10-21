@@ -8,12 +8,12 @@ use Illuminate\Database\Seeder;
 class EmployeeSeeder extends Seeder
 {
     /**
-     * Seed the clinic's default psychiatrist.
+     * Seed the clinic's psychiatrist as shown on the patient landing page.
      */
     public function run(): void
     {
         Employee::updateOrCreate(
-            ['full_name' => 'dr. Aditama, Sp.KJ'],
+            ['full_name' => 'dr. John Doe, Sp.KJ'],
             ['role' => 'Psychiatrist', 'is_active' => true],
         );
     }
