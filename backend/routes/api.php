@@ -15,5 +15,7 @@ Route::prefix('v1')->middleware(VerifySupabaseJwt::class)->group(function () {
     Route::post('/appointments', [AppointmentController::class, 'store'])->middleware(ThrottleAppointmentCreation::class);
     Route::get('/appointments', [AppointmentController::class, 'index']);
     Route::get('/staff/appointments', [AppointmentController::class, 'staffIndex'])->middleware(EnsureKaryawan::class);
+    Route::patch('/staff/appointments/{appointment}', [AppointmentController::class, 'update'])->middleware(EnsureKaryawan::class);
+    Route::delete('/staff/appointments/{appointment}', [AppointmentController::class, 'destroy'])->middleware(EnsureKaryawan::class);
     Route::get('/queues', [QueueController::class, 'index'])->middleware(EnsureKaryawan::class);
 });

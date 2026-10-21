@@ -41,6 +41,55 @@ class AppointmentController extends Controller
         return response()->json($appointments);
     }
 
+    public function update(Request $request, Appointment $appointment): JsonResponse
+    {
+        // Staff-only lifecycle update. The queue mirrors the appointment status
+        // so GET /queues (filtered to waiting|in_consultation) always shows the
+        // live queue while finished or cancelled records leave it.
+        $validated = $request->validate([
+            'status' => ['required', 'string', 'in:requested,confirmed,in_consultation,completed,cancelled,rejected'],
+            'notes' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $queueStatus = match ($validated['status']) {
+            'requested', 'confirmed' => 'waiting',
+            'in_consultation' => 'in_consultation',
+            'completed' => 'completed',
+            'cancelled', 'rejected' => 'cancelled',
+        };
+
+        $appointment = DB::transaction(function () use ($appointment, $validated, $queueStatus) {
+            $appointment->update([
+                'status' => $validated['status'],
+                'notes' => $validated['notes'] ?? $appointment->notes,
+            ]);
+
+            PatientQueue::updateOrCreate(
+                ['appointment_id' => $appointment->id],
+                ['status' => $queueStatus],
+            );
+
+            return $appointment->load([
+                'employee:id,full_name,role',
+                'patient:id,user_id,full_name,gender,phone_number',
+                'patient.user:id,full_name',
+                'queue:id,appointment_id,status',
+            ]);
+        });
+
+        return response()->json(['message' => 'Status appointment diperbarui', 'data' => $appointment]);
+    }
+
+    public function destroy(Appointment $appointment): JsonResponse
+    {
+        DB::transaction(function () use ($appointment) {
+            // patient_queues rows cascade through the FK constraint.
+            $appointment->delete();
+        });
+
+        return response()->json(['message' => 'Appointment dihapus']);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
