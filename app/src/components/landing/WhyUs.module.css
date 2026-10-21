@@ -15,13 +15,14 @@
 }
 .badge {
   display: block;
-  margin-bottom: 6px;
-  font: 11px var(--font-sans);
+  margin-bottom: 0.5rem;
+  font: 600 0.875rem var(--font-sans);
+  font-variant-numeric: tabular-nums;
   color: var(--coral-text);
   letter-spacing: .08em;
 }
-.item h3 { font-size: 20px; margin-bottom: 8px; }
-.item p { color: var(--muted); font: 14px/1.6 var(--font-sans); }
+.item h3 { font-size: 1.35rem; line-height: 1.3; letter-spacing: -.01em; margin-bottom: 8px; }
+.item p { color: var(--muted); font-size: 1rem; line-height: 1.65; max-width: 55ch; }
 .center { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
 .rings {
   position: relative;
@@ -40,7 +41,7 @@
 }
 .rings::before { inset: 0; }
 .rings::after { inset: 32px; }
-.rings h2 { font-size: clamp(20px, 2.6vw, 26px); position: relative; z-index: 1; text-align: center; }
+.rings h2 { font-size: clamp(1.35rem, 2vw, 1.5rem); line-height: 1.3; letter-spacing: -.01em; position: relative; z-index: 1; text-align: center; }
 
 @media (max-width: 720px) {
   .grid { flex-direction: column; }

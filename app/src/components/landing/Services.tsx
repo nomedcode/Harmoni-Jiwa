@@ -22,7 +22,6 @@ export function Services() {
               <h3>{service.title}</h3>
               <p className={styles.sub}>{service.text}</p>
             </div>
-            <span className={styles.arrow} aria-hidden="true">↗</span>
           </a>
         ))}
       </div>
@@ -33,7 +32,6 @@ export function Services() {
               <h3>{service.title}</h3>
               <p className={styles.sub}>{service.sub}</p>
             </div>
-            <span className={styles.arrow} aria-hidden="true">↗</span>
           </a>
         ))}
         <a className={`${styles.card} ${styles.cardOutline}`} href="#booking">
@@ -41,7 +39,6 @@ export function Services() {
             <h3>Lihat semua layanan</h3>
             <p className={styles.sub}>6 layanan tersedia</p>
           </div>
-          <span className={`${styles.arrow} ${styles.arrowAccent}`} aria-hidden="true">↗</span>
         </a>
       </div>
     </section>

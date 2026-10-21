@@ -53,10 +53,10 @@ export const whyUs: Reason[] = [
 ];
 
 export const testimonials: Testimonial[] = [
-  { quote: "Aku takut sekali untuk mulai konsultasi. Tim dr. John Doe benar-benar mengubah itu. Sekarang aku menantikan setiap sesi.", name: "Rani S.", date: "Maret 2025" },
-  { quote: "Kami membawa seluruh keluarga ke sini selama dua tahun. Cara mereka mendampingi anak remaja kami sangat sabar dan tidak menghakimi.", name: "Budi T.", date: "Januari 2025" },
-  { quote: "Ada kondisi darurat di malam hari. Mereka menyediakan slot dalam dua jam dan benar-benar membantu.", name: "Aulia P.", date: "November 2024" },
-  { quote: "Booking online dalam hitungan menit dan dapat jadwal minggu itu juga. Tenang, modern, dan stafnya ramah.", name: "Fajar M.", date: "September 2024" },
+  { quote: "Aku takut sekali untuk mulai konsultasi. Tim dr. John Doe benar-benar mengubah itu. Sekarang aku menantikan setiap sesi.", name: "John Doe 1", date: "Maret 2025" },
+  { quote: "Kami membawa seluruh keluarga ke sini selama dua tahun. Cara mereka mendampingi anak remaja kami sangat sabar dan tidak menghakimi.", name: "John Doe 2", date: "Januari 2025" },
+  { quote: "Ada kondisi darurat di malam hari. Mereka menyediakan slot dalam dua jam dan benar-benar membantu.", name: "John Doe 3", date: "November 2024" },
+  { quote: "Booking online dalam hitungan menit dan dapat jadwal minggu itu juga. Tenang, modern, dan stafnya ramah.", name: "John Doe 4", date: "September 2024" },
 ];
 
 export const officeHours: OfficeHour[] = [

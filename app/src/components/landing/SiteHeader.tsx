@@ -15,7 +15,7 @@ export function SiteHeader() {
     <header className={styles.header}>
       <div className={`wrap ${styles.inner}`}>
     <a className="brand" href="#top" aria-label="Harmoni Jiwa, halaman utama">
-          <span className="brand-mark" aria-hidden="true">{site.shortBrand.mark}</span>
+          <img className="brand-mark" src="/logo.svg" alt="" aria-hidden="true" />
           <span>{site.shortBrand.first}<br /><em>{site.shortBrand.second}</em></span>
         </a>
         <nav className={styles.navLinks} aria-label="Navigasi utama">
@@ -29,7 +29,7 @@ export function SiteHeader() {
             <button className="header-cta" type="button" onClick={() => void signOut()}>Keluar</button>
           ) : (
             <button className="header-cta" type="button" onClick={() => openModal()}>
-              Masuk <span aria-hidden="true">↗</span>
+              Masuk
             </button>
           )}
           <button
@@ -57,7 +57,7 @@ export function SiteHeader() {
         ))}
         <div className={styles.mobileActions}>
           <a className="primary-button" href="#booking" onClick={closeMenu}>
-            Mulai konsultasi <span aria-hidden="true">↗</span>
+            Mulai konsultasi
           </a>
         </div>
       </nav>

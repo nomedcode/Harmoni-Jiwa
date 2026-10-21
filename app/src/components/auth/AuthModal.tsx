@@ -82,7 +82,7 @@ export function AuthModal() {
             {notice && <p className="form-note">{notice}</p>}
           </div>
           <button className="primary-button form-submit" type="submit" disabled={submitting}>
-            {mode === "login" ? "Masuk" : "Buat akun"} <span aria-hidden="true">↗</span>
+            {mode === "login" ? "Masuk" : "Buat akun"}
           </button>
           {pendingEmail && (
             <button

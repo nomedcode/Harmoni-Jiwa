@@ -7,13 +7,14 @@
   flex-wrap: wrap;
 }
 .info { flex: 1 1 260px; }
-.info h2 { font-size: clamp(26px, 3.6vw, 36px); margin-bottom: 20px; }
+.info h2 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); line-height: 1.2; letter-spacing: -.015em; margin-bottom: 20px; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
 .tags li {
   background: var(--sage-pale);
   border-radius: var(--radius-full);
   padding: 9px 16px;
-  font: 13px var(--font-sans);
+  font: 500 0.8125rem var(--font-sans);
+  letter-spacing: .01em;
   color: var(--ink);
   white-space: nowrap;
   list-style: none;
@@ -34,17 +35,17 @@
   flex: 1 1 260px;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 18px;
-  text-align: right;
+  text-align: left;
 }
-.copy p { color: var(--muted); font: 15px/1.7 var(--font-sans); max-width: 360px; }
+.copy p { color: var(--muted); font-size: 1rem; line-height: 1.65; max-width: 55ch; }
 .moreLink {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font: 12px var(--font-sans);
-  letter-spacing: .04em;
+  font: 600 0.8125rem var(--font-sans);
+  letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--coral-text);
   cursor: pointer;
@@ -52,7 +53,7 @@
 
 @media (max-width: 960px) {
   .row { justify-content: flex-start; }
-  .copy { flex: 1 1 100%; align-items: flex-start; text-align: left; order: 3; }
+  .copy { flex: 1 1 100%; order: 3; }
   .copy p { max-width: none; }
 }
 @media (max-width: 560px) {

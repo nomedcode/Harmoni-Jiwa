@@ -11,7 +11,7 @@ export function Hero() {
         Percakapan yang aman, profesional, dan manusiawi untuk membantu kamu menjalani hari dengan lebih ringan.
       </p>
       <div className={styles.actions}>
-        <a className="primary-button" href="#booking">Mulai konsultasi <span aria-hidden="true">↗</span></a>
+        <a className="primary-button" href="#booking">Mulai konsultasi</a>
         <a className="secondary-button" href="#tentang">Kenali dokter kami</a>
       </div>
       <div className={styles.media} role="img" aria-label="Ilustrasi ruang konsultasi yang tenang">

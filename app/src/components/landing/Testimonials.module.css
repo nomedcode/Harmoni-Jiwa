@@ -1,5 +1,5 @@
 .section { padding: var(--sec-pad) 0; }
-.section h2 { font-size: clamp(26px, 3.6vw, 36px); margin-bottom: 28px; }
+.section h2 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); line-height: 1.2; letter-spacing: -.015em; margin-bottom: 28px; }
 .track {
   display: flex;
   gap: var(--gap);
@@ -22,7 +22,7 @@
   gap: 18px;
 }
 .stars { color: var(--coral-text); font-size: 15px; letter-spacing: 2px; }
-.quote { margin: 0; font: 15px/1.65 var(--font-sans); color: var(--ink); flex: 1; }
+.quote { margin: 0; font-size: 1rem; line-height: 1.65; color: var(--ink); flex: 1; }
 .divider {
   height: 1px;
   background: linear-gradient(90deg, rgba(217, 229, 220, 0) 0%, rgba(232, 117, 95, .5) 50%, rgba(217, 229, 220, 0) 100%);

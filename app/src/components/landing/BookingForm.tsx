@@ -77,7 +77,7 @@ export function BookingForm() {
             WhatsApp.
           </p>
           <button className="text-button" type="button" onClick={() => setSubmitted(false)}>
-            Buat janji lain ↗
+            Buat janji lain
           </button>
         </div>
       </div>
@@ -172,7 +172,7 @@ export function BookingForm() {
           {error && <p className="form-error">{error}</p>}
         </div>
         <button className="primary-button form-submit" type="submit" disabled={submitting}>
-          {submitting ? "Mengirim…" : "Kirim permintaan"} <span aria-hidden="true">↗</span>
+          {submitting ? "Mengirim…" : "Kirim permintaan"}
         </button>
       </form>
     </div>

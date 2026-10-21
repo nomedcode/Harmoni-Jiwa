@@ -12,11 +12,12 @@
 }
 .band h2 {
   color: var(--paper);
-  font-size: clamp(28px, 5vw, 48px);
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  line-height: 1.2;
+  letter-spacing: -.015em;
   max-width: 640px;
-  letter-spacing: -.03em;
 }
-.band p { color: var(--on-dark); max-width: 480px; font: 15px/1.6 var(--font-sans); }
+.band p { color: var(--on-dark); max-width: 480px; font-size: 1rem; line-height: 1.65; }
 .band :global(.primary-button) { margin-top: 8px; background: var(--coral-text); }
 .band :global(.primary-button):hover { background: var(--coral-dark); }
 

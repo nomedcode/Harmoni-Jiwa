@@ -15,7 +15,7 @@ export function Doctor() {
         <div className={styles.copy}>
           <p>{doctor.bio}</p>
           <a className={styles.moreLink} href="#booking">
-            Kenal lebih jauh <span aria-hidden="true">↗</span>
+            Kenal lebih jauh
           </a>
         </div>
       </div>

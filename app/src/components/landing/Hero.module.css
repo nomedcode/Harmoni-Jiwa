@@ -3,17 +3,17 @@
   text-align: center;
 }
 .title {
-  font-size: clamp(40px, 7vw, 84px);
-  line-height: .96;
-  letter-spacing: -.045em;
-  margin-bottom: 22px;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.15;
+  letter-spacing: -.02em;
 }
 .title i { color: var(--coral-text); font-style: normal; }
 .intro {
-  max-width: 460px;
-  margin: 0 auto 32px;
+  max-width: 48ch;
+  margin: 1.25rem auto 32px;
   color: var(--muted);
-  font: 15px/1.7 var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
 }
 .actions {
   display: flex;
@@ -86,7 +86,8 @@
   gap: 9px;
   padding: 8px 16px 8px 8px;
   box-shadow: 0 4px 20px rgba(25, 59, 58, .14);
-  font: 13px var(--font-sans);
+  font: 500 0.8125rem var(--font-sans);
+  letter-spacing: .01em;
   max-width: calc(100% - 32px);
 }
 .chipHere { top: 20px; left: 20px; padding: 8px 16px; }
@@ -134,7 +135,7 @@
 }
 .chipTrust { bottom: 20px; right: 20px; gap: 10px; }
 .trustAvatars { color: var(--coral); letter-spacing: -5px; font-size: 15px; }
-.trustLabel { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.trustLabel { font-size: 0.8125rem; color: var(--muted); white-space: nowrap; }
 
 @media (max-width: 560px) {
   .actions { flex-direction: column; align-items: stretch; }

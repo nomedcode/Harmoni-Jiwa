@@ -2,25 +2,27 @@
 .row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 40px;
   flex-wrap: wrap;
   margin-bottom: 32px;
 }
 .row h2 {
-  font-size: clamp(26px, 4vw, 42px);
-  line-height: 1.08;
-  letter-spacing: -.03em;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  line-height: 1.2;
+  letter-spacing: -.015em;
   flex: 1 1 460px;
   max-width: 560px;
   text-align: left;
+  hanging-punctuation: first;
 }
 .row h2 i { color: var(--coral-text); font-style: normal; }
 .row p {
   flex: 1 1 260px;
-  max-width: 340px;
+  max-width: 55ch;
   color: var(--muted);
-  font: 15px/1.7 var(--font-sans);
-  align-self: flex-end;
+  font-size: 1rem;
+  line-height: 1.65;
 }
 .stats {
   display: grid;
@@ -33,13 +35,13 @@
 .value {
   font: 600 clamp(18px, 2.4vw, 26px) var(--font-sans);
   letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums;
   color: var(--ink);
   margin-bottom: 6px;
 }
 .label { font: 14px/1.5 var(--font-sans); color: var(--muted); margin: 0; }
 
 @media (max-width: 720px) {
-  .row p { align-self: flex-start; }
   .stats { grid-template-columns: 1fr; border-top: none; }
   .cell { border-left: none; border-top: 1px solid var(--border); padding: 18px 0; }
   .cell:first-child { border-top: none; padding-top: 0; }

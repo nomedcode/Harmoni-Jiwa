@@ -7,7 +7,7 @@
 export const site = {
   name: "Harmoni Jiwa",
   legalName: "Klinik Psikiatri dr. John Doe",
-  shortBrand: { first: "Harmoni", second: "Jiwa", mark: "HJ" },
+  shortBrand: { first: "Harmoni", second: "Jiwa" },
   tagline: "Ruang aman untuk bercerita",
   description:
     "Klinik psikiatri personal untuk konsultasi yang aman, profesional, dan manusiawi.",

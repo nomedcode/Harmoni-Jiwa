@@ -1,6 +1,24 @@
 import type { Metadata, Viewport } from "next";
+import { Newsreader, Plus_Jakarta_Sans } from "next/font/google";
 import { site, siteUrl } from "@/content/site";
 import "./globals.css";
+
+// Heading serif (empathetic, editorial) + body/UI sans (clean, rational).
+// Self-hosted via next/font so the app needs no external font CDN at runtime.
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
+  variable: "--font-newsreader",
+  display: "swap",
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -39,7 +57,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang={site.language} data-scroll-behavior="smooth">
+    <html
+      lang={site.language}
+      className={`${newsreader.variable} ${plusJakartaSans.variable}`}
+      data-scroll-behavior="smooth"
+    >
       <body>{children}</body>
     </html>
   );

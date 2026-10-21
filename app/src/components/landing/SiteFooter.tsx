@@ -21,7 +21,7 @@ export function SiteFooter() {
       <div className={`wrap ${styles.top}`}>
         <div className={styles.brandBlock}>
           <span className="brand">
-            <span className="brand-mark" aria-hidden="true">{site.shortBrand.mark}</span>
+            <img className="brand-mark" src="/logo.svg" alt="" aria-hidden="true" />
             <span>{site.shortBrand.first}<br /><em>{site.shortBrand.second}</em></span>
           </span>
           <p>Ruang aman untuk bercerita, untuk seluruh keluarga.</p>
@@ -43,7 +43,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className={`wrap ${styles.bottom}`}>
-        <span>© 2026 {site.name}. Seluruh hak cipta dilindungi.</span>
+        <span>© 2026 {site.name}</span>
       </div>
     </footer>
   );
