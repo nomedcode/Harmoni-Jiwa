@@ -37,6 +37,8 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 `NEXT_PUBLIC_SUPABASE_ANON_KEY` is a public browser key. Never use the `service_role` or any secret key in the frontend. `NEXT_PUBLIC_SITE_URL` is used for the canonical URL, OpenGraph tags, `robots.txt`, and `sitemap.xml` — set it to the production domain on Vercel.
 
+For local simulation, `NEXT_PUBLIC_SUPABASE_URL` is `http://127.0.0.1:54321` (the Supabase CLI stack in `supabase/`) with the publishable key from `supabase status` — see the root README quickstart.
+
 Restart `npm run dev` after changing `.env.local`.
 
 ## Validation

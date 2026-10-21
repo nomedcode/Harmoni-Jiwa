@@ -14,7 +14,7 @@ Patients book consultation slots through the web app; staff manage appointments 
 | Layer | Technology |
 |---|---|
 | Frontend | Next.js (App Router), React, TypeScript, CSS Modules |
-| Backend | Laravel 12, PostgreSQL |
+| Backend | Laravel 12, PostgreSQL / SQLite (local) |
 | Auth | Supabase Auth (JWT) |
 | Testing | Vitest + React Testing Library (frontend), PHPUnit (backend) |
 | Deployment | Vercel (frontend), Proxmox VM/LXC (backend) |
@@ -24,7 +24,9 @@ Patients book consultation slots through the web app; staff manage appointments 
 ```text
 app/        Next.js frontend — see app/README.md
 backend/    Laravel REST API — see backend/README.md
+supabase/   Local Supabase CLI project (Auth + Postgres for development)
 postman/    Postman collection for manual API testing
+scripts/    Helper scripts (demo account seeding for Supabase Auth)
 ```
 
 ## Architecture
@@ -51,19 +53,37 @@ Every API request must still carry a Supabase JWT, and its authorization is vali
 
 ## Quickstart
 
-Prerequisites: Node.js LTS, PHP 8.2+, Composer, PostgreSQL.
+Prerequisites: Node.js LTS, PHP 8.2+, Composer, Docker (the Supabase CLI runs the local Auth stack in containers), Python 3.
 
-```powershell
-# Frontend
+```bash
+# 1. Start the local Supabase Auth stack, then copy the keys it prints
+cd supabase
+supabase start
+supabase status    # copy the publishable (sb_publishable_...) and secret (sb_secret_...) keys
+cd ..
+
+# 2. Frontend — put the publishable key into .env.local, install, run
+cp app/.env.local.example app/.env.local
 cd app
 npm install
 npm run dev        # http://localhost:3000
 
-# Backend (separate terminal)
-cd backend
-php artisan migrate
+# 3. Backend — SQLite by default, no database server required (separate terminal)
+cd ../backend
+cp .env.example .env
+php artisan key:generate
+
+# 4. Create the two demo accounts in Supabase Auth (secret key from step 1)
+SUPABASE_SERVICE_KEY=<sb_secret_...> ../scripts/supabase_demo_users.py
+
+# 5. Migrate, seed demo data, serve the API
+php artisan migrate --seed
 php artisan serve --host=127.0.0.1 --port=8000   # http://127.0.0.1:8000
 ```
+
+Demo accounts (password `Password123!`): `pasien@harmoni.test` signs in as a patient, `karyawan@harmoni.test` opens the staff dashboard.
+
+Windows/PowerShell: use `Copy-Item` instead of `cp`, and set the key with `$env:SUPABASE_SERVICE_KEY = "<sb_secret_...>"` before running the script.
 
 Environment variables, role setup, and seeders are documented in `app/README.md` and `backend/README.md`.
 
