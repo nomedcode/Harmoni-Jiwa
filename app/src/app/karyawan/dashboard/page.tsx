@@ -6,10 +6,13 @@ import { useRouter } from "next/navigation";
 import type { Session } from "@supabase/supabase-js";
 import {
   ApiError,
+  deleteAppointment,
   formatApiError,
   listStaffAppointments,
   syncProfile,
+  updateAppointmentStatus,
   type ApiAppointment,
+  type AppointmentStatus,
   type AuthRole,
 } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
@@ -31,10 +34,11 @@ type StaffAppointment = ApiAppointment & {
   queue?: { status?: string };
 };
 
-type StatusFilter = "all" | "requested" | "waiting" | "in_consultation" | "completed" | "cancelled" | "rejected";
+type StatusFilter = "all" | "requested" | "confirmed" | "in_consultation" | "completed" | "cancelled" | "rejected";
 
 const statusLabels: Record<string, string> = {
   requested: "Menunggu konfirmasi",
+  confirmed: "Dikonfirmasi",
   waiting: "Menunggu antrean",
   in_consultation: "Sedang konsultasi",
   completed: "Selesai",
@@ -44,6 +48,7 @@ const statusLabels: Record<string, string> = {
 
 const statusStyles: Record<string, string> = {
   requested: styles.statusRequested,
+  confirmed: styles.statusConfirmed,
   waiting: styles.statusWaiting,
   in_consultation: styles.statusInConsultation,
   completed: styles.statusCompleted,
@@ -66,16 +71,20 @@ function formatSchedule(value?: string): string {
 }
 
 function statusFor(appointment: StaffAppointment): string {
-  return appointment.queue?.status || appointment.status || "requested";
+  // Appointment status is the single source of truth; the queue row mirrors it
+  // (kept in sync by the backend) and is only exposed via GET /queues.
+  return appointment.status || "requested";
 }
 
 export default function EmployeeDashboard() {
   const router = useRouter();
-  const [, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [role, setRole] = useState<AuthRole | null>(null);
   const [appointments, setAppointments] = useState<StaffAppointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [actionError, setActionError] = useState("");
+  const [busyId, setBusyId] = useState<number | null>(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [page, setPage] = useState(1);
@@ -168,13 +177,47 @@ export default function EmployeeDashboard() {
     router.replace("/");
   }
 
+  async function changeStatus(appointment: StaffAppointment, status: AppointmentStatus) {
+    if (!session?.access_token || !appointment.id || busyId) return;
+    setBusyId(appointment.id);
+    setActionError("");
+    try {
+      const result = await updateAppointmentStatus(appointment.id, { status }, session.access_token);
+      const updated = (result.data ?? {}) as StaffAppointment;
+      setAppointments((current) =>
+        current.map((item) => (item.id === appointment.id ? { ...item, ...updated, id: appointment.id } : item)),
+      );
+    } catch (actionFailure) {
+      setActionError(formatApiError(actionFailure));
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function removeAppointment(appointment: StaffAppointment) {
+    if (!session?.access_token || !appointment.id || busyId) return;
+    const label = appointment.patient?.full_name ?? "appointment ini";
+    if (!window.confirm(`Hapus appointment ${label}? Tindakan ini permanen.`)) return;
+    setBusyId(appointment.id);
+    setActionError("");
+    try {
+      await deleteAppointment(appointment.id, session.access_token);
+      setAppointments((current) => current.filter((item) => item.id !== appointment.id));
+      setTotal((current) => Math.max(0, current - 1));
+    } catch (actionFailure) {
+      setActionError(formatApiError(actionFailure));
+    } finally {
+      setBusyId(null);
+    }
+  }
+
   return (
     <div className={styles.shell}>
       <a className="skip-link" href="#staff-main">Lewati ke konten utama</a>
       <header className={styles.header}>
         <div className={styles.headerInner}>
           <Link className="brand" href="/" aria-label="Kembali ke halaman utama">
-            <span className="brand-mark" aria-hidden="true">{site.shortBrand.mark}</span>
+            <img className="brand-mark" src="/logo.svg" alt="" aria-hidden="true" />
             <span>{site.shortBrand.first}<br /><em>{site.shortBrand.second}</em></span>
           </Link>
           <div className={styles.headerActions}>
@@ -186,35 +229,22 @@ export default function EmployeeDashboard() {
 
       <main className={styles.main} id="staff-main" tabIndex={-1}>
         <section className={styles.hero} aria-labelledby="staff-title">
-          <div>
-            <h1 id="staff-title">Dashboard<br /><i>appointment pasien.</i></h1>
-            <p className={styles.intro}>
-              Pantau jadwal dan informasi appointment seluruh pasien dalam satu tempat.
-            </p>
-          </div>
-          <div className={styles.heroNote}>
-            <span className={styles.noteMark} aria-hidden="true"></span>
-            <div>
-              <strong>Akses karyawan aktif</strong>
-              <span className={styles.noteCaption}>Data diperbarui dari sistem klinik</span>
+          <h1 id="staff-title">Dashboard<br /><i>appointment pasien.</i></h1>
+          <dl className={styles.heroStats}>
+            <div className={styles.heroStat}>
+              <dt>Total appointment</dt>
+              <dd>{total}</dd>
             </div>
-          </div>
+            <div className={`${styles.heroStat} ${styles.heroStatAccent}`}>
+              <dt>Jadwal hari ini</dt>
+              <dd>{todayCount}</dd>
+            </div>
+          </dl>
         </section>
 
         <div role="alert" aria-live="assertive">
-          {error && <div className={styles.alert}>{error}</div>}
+          {(error || actionError) && <div className={styles.alert}>{actionError || error}</div>}
         </div>
-
-        <section className={styles.statGrid} aria-label="Ringkasan appointment">
-          <article className={styles.statCard}>
-            <span className={styles.statLabel}>Total appointment</span>
-            <strong>{total}</strong>
-          </article>
-          <article className={`${styles.statCard} ${styles.statCardAccent}`}>
-            <span className={styles.statLabel}>Jadwal hari ini</span>
-            <strong>{todayCount}</strong>
-          </article>
-        </section>
 
         <section className={styles.panel} aria-labelledby="appointment-title">
           <div className={styles.panelHeading}>
@@ -240,10 +270,11 @@ export default function EmployeeDashboard() {
               >
                 <option value="all">Semua status</option>
                 <option value="requested">Menunggu konfirmasi</option>
-                <option value="waiting">Menunggu antrean</option>
+                <option value="confirmed">Dikonfirmasi</option>
                 <option value="in_consultation">Sedang konsultasi</option>
                 <option value="completed">Selesai</option>
                 <option value="cancelled">Dibatalkan</option>
+                <option value="rejected">Ditolak</option>
               </select>
             </label>
           </div>
@@ -272,12 +303,12 @@ export default function EmployeeDashboard() {
                     <th scope="col">Layanan</th>
                     <th scope="col">Dokter</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredAppointments.map((appointment) => {
                     const status = statusFor(appointment);
-                    const accountName = appointment.patient?.user?.full_name;
                     return (
                       <tr key={appointment.id ?? `${appointment.scheduled_at}-${appointment.patient?.full_name}`}>
                         <td className={styles.cellTruncate}>
@@ -288,7 +319,6 @@ export default function EmployeeDashboard() {
                         </td>
                         <td className={styles.cellTruncate}>
                           <strong className="truncate">{formatSchedule(appointment.scheduled_at)}</strong>
-                          {accountName && <span className={`${styles.cellCaption} truncate`}>Akun: {accountName}</span>}
                         </td>
                         <td className={styles.cellTruncate}><span className="truncate">{appointment.service_type ?? "—"}</span></td>
                         <td className={styles.cellTruncate}><span className="truncate">{appointment.employee?.full_name ?? "—"}</span></td>
@@ -296,6 +326,36 @@ export default function EmployeeDashboard() {
                           <span className={`${styles.status} ${statusStyles[status] ?? ""}`}>
                             {statusLabels[status] ?? status}
                           </span>
+                        </td>
+                        <td>
+                          <div className={styles.rowActions}>
+                            <select
+                              className={styles.statusSelect}
+                              aria-label={`Ubah status appointment ${appointment.patient?.full_name ?? ""}`}
+                              value={appointment.status ?? "requested"}
+                              disabled={busyId === appointment.id}
+                              onChange={(event) => void changeStatus(appointment, event.target.value as AppointmentStatus)}
+                            >
+                              {([
+                                "requested",
+                                "confirmed",
+                                "in_consultation",
+                                "completed",
+                                "cancelled",
+                                "rejected",
+                              ] as AppointmentStatus[]).map((value) => (
+                                <option key={value} value={value}>{statusLabels[value] ?? value}</option>
+                              ))}
+                            </select>
+                            <button
+                              className={styles.deleteButton}
+                              type="button"
+                              disabled={busyId === appointment.id}
+                              onClick={() => void removeAppointment(appointment)}
+                            >
+                              Hapus
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );

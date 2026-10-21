@@ -180,6 +180,26 @@ export function listStaffAppointments(accessToken: string, page = 1): Promise<Pa
   return apiRequest(`staff/appointments?page=${page}`, {}, accessToken);
 }
 
+export type AppointmentStatus =
+  | "requested"
+  | "confirmed"
+  | "in_consultation"
+  | "completed"
+  | "cancelled"
+  | "rejected";
+
+export function updateAppointmentStatus(
+  appointmentId: number,
+  payload: { status: AppointmentStatus; notes?: string },
+  accessToken: string,
+): Promise<{ message?: string; data: ApiAppointment }> {
+  return apiJson(`staff/appointments/${appointmentId}`, "PATCH", payload, accessToken);
+}
+
+export function deleteAppointment(appointmentId: number, accessToken: string): Promise<{ message?: string }> {
+  return apiRequest(`staff/appointments/${appointmentId}`, { method: "DELETE" }, accessToken);
+}
+
 export async function healthCheck(): Promise<{ status: number; url: string }> {
   const url = apiHealthUrl();
   if (!url) throw new ApiError("NEXT_PUBLIC_API_URL tidak valid.", { kind: "configuration", url });
