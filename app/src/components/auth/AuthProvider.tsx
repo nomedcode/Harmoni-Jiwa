@@ -25,6 +25,8 @@ export type AuthMode = "login" | "register";
 
 type AuthContextValue = {
   session: Session | null;
+  /** False until the stored session has been restored or confirmed absent. */
+  ready: boolean;
   role: AuthRole;
   isStaff: boolean;
   /** Psychiatrists available for booking. Empty until the patient signs in. */
@@ -56,6 +58,7 @@ function isInvalidRefreshToken(error: unknown): boolean {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
+  const [ready, setReady] = useState(() => !supabase);
   const [role, setRole] = useState<AuthRole>("patient");
   const [employees, setEmployees] = useState<ApiEmployee[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -152,7 +155,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       void syncProfile(activeSession);
     }
 
-    void restoreSession();
+    void restoreSession().finally(() => {
+      if (!cancelled) setReady(true);
+    });
     const { data: listener } = authClient.auth.onAuthStateChange((event, nextSession) => {
       setSession(nextSession);
       if (nextSession && event !== "TOKEN_REFRESHED") void syncProfile(nextSession);
@@ -251,6 +256,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<AuthContextValue>(() => ({
     session,
+    ready,
     role,
     isStaff: Boolean(session) && (role === "karyawan" || role === "admin"),
     employees: session ? employees : [],
@@ -268,7 +274,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signOut,
     resendVerification,
   }), [
-    session, role, employees, modalOpen, mode, error, notice, pendingEmail,
+    session, ready, role, employees, modalOpen, mode, error, notice, pendingEmail,
     openModal, closeModal, changeMode, signIn, signUp, signOut, resendVerification,
   ]);
 
