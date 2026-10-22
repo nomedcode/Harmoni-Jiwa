@@ -9,6 +9,9 @@
   margin: 0 calc(var(--pad) * -1);
   list-style: none;
 }
+@media (max-width: 720px) {
+  .track { margin: 0 -20px; padding-inline: 20px; }
+}
 .track::-webkit-scrollbar { height: 6px; }
 .track::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 .card {

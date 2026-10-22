@@ -23,6 +23,7 @@
 
 .media {
   position: relative;
+  width: 100%;
   min-height: 420px;
   aspect-ratio: 5/4;
   border-radius: var(--radius-lg);

@@ -59,10 +59,8 @@
 .doctor:has(input:checked) .avatar { background: var(--ink); color: var(--paper); }
 .doctorText { display: grid; min-width: 0; }
 .doctorText strong {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font: 600 15px var(--font-sans);
+  overflow-wrap: anywhere;
+  font: 600 15px/1.35 var(--font-sans);
 }
 .doctorText span { color: var(--muted); font: 13px var(--font-sans); }
 

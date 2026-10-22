@@ -206,7 +206,7 @@ input:not([type="checkbox"]), select {
   color: var(--ink);
   font: 16px var(--font-sans);
 }
-input:focus, select:focus { border-color: var(--coral-text); }
+input:focus, select:focus { border-color: var(--coral-text); box-shadow: 0 1px 0 var(--coral-text); }
 .form-submit { border: 0; cursor: pointer; width: 100%; justify-content: center; }
 .form-error { margin: 8px 0 18px; color: var(--danger); font: 0.8125rem/1.5 var(--font-sans); }
 .form-hint { margin: 8px 0 18px; color: var(--muted); font: 0.8125rem/1.5 var(--font-sans); }

@@ -86,7 +86,7 @@ function BookingSteps({ now }: { now: ClinicMoment }) {
     return (
       <section className={styles.success} role="status" aria-labelledby="booking-success">
         <span className={styles.successIcon} aria-hidden="true"><CheckIcon /></span>
-        <h2 id="booking-success">Permintaan terkirim.</h2>
+        <h2 id="booking-success" tabIndex={-1} ref={(heading) => heading?.focus()}>Permintaan terkirim.</h2>
         <p>
           Sesi dengan {doctor?.full_name} pada {dayLabel}, pukul {time} WIB. Tim kami akan mengonfirmasi jadwal
           lewat WhatsApp.

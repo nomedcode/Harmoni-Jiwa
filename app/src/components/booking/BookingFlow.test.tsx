@@ -135,7 +135,7 @@ describe("BookingFlow", () => {
       schedule: "2026-10-26 13:00",
       employee_id: 7,
     }, "token-123");
-    expect(await screen.findByText("Permintaan terkirim.")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Permintaan terkirim." })).toHaveFocus();
     expect(screen.getByRole("link", { name: "Lihat janji saya" })).toHaveAttribute("href", "/janji-saya");
   });
 
