@@ -168,8 +168,8 @@ export function createAppointment(payload: AppointmentPayload, accessToken: stri
   return apiJson("appointments", "POST", payload, accessToken);
 }
 
-export function listAppointments(accessToken: string): Promise<PaginatedResponse<ApiAppointment>> {
-  return apiRequest("appointments", {}, accessToken);
+export function listAppointments(accessToken: string, page = 1): Promise<PaginatedResponse<ApiAppointment>> {
+  return apiRequest(`appointments?page=${page}`, {}, accessToken);
 }
 
 export function listQueues(accessToken: string): Promise<PaginatedResponse<ApiAppointment>> {

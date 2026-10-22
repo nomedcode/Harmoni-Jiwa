@@ -8,19 +8,9 @@ import { bookingServices, schedules } from "@/content/landing";
 import { useClinicNow } from "@/hooks/useClinicNow";
 import { ApiError, createAppointment, formatApiError } from "@/lib/api";
 import { clinicMoment, SESSION_MINUTES, slotState, type ClinicMoment, type SlotState } from "@/lib/office-hours";
+import { initials, roleLabel } from "@/lib/people";
 import { dayLabelFormat, firstAvailableDate, ScheduleCalendar } from "./ScheduleCalendar";
 import styles from "./BookingFlow.module.css";
-
-const roleLabels: Record<string, string> = { psychiatrist: "Psikiater" };
-
-export function roleLabel(role: string): string {
-  return roleLabels[role.toLowerCase()] ?? role;
-}
-
-export function initials(name: string): string {
-  const words = name.replace(/^dr\.?\s+/i, "").split(/[\s,]+/).filter(Boolean);
-  return words.slice(0, 2).map((word) => word[0]!.toUpperCase()).join("");
-}
 
 const slotReason: Record<Exclude<SlotState, "available">, string> = {
   past: "Lewat",
