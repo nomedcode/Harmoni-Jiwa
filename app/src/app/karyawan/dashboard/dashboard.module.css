@@ -22,9 +22,7 @@
   border-radius: var(--radius-full);
   background: var(--sage-pale);
   color: var(--ink);
-  font: 11px var(--font-sans);
-  letter-spacing: .06em;
-  text-transform: uppercase;
+  font: 12px var(--font-sans);
 }
 .main {
   width: min(var(--maxw), calc(100% - 64px));
@@ -53,9 +51,7 @@
 .heroStatAccent { background: var(--ink); color: var(--paper); }
 .heroStat dt {
   color: var(--coral-text);
-  font: 11px var(--font-sans);
-  letter-spacing: .1em;
-  text-transform: uppercase;
+  font: 12px var(--font-sans);
 }
 .heroStatAccent dt { color: var(--coral); }
 .heroStat dd {
@@ -78,7 +74,6 @@
   gap: 20px;
   margin-bottom: 28px;
 }
-.panelHeading :global(.eyebrow) { margin-bottom: 10px; }
 .panelHeading h2 { font-size: clamp(28px, 4vw, 42px); line-height: 1; letter-spacing: -.03em; }
 .pageCaption { color: var(--muted); font: 12px var(--font-sans); }
 
@@ -101,9 +96,7 @@
   padding: 0 14px 13px;
   color: var(--muted);
   border-bottom: 1px solid var(--border);
-  font: 10px var(--font-sans);
-  letter-spacing: .1em;
-  text-transform: uppercase;
+  font: 12px var(--font-sans);
 }
 .table td {
   padding: 17px 14px;
@@ -115,7 +108,7 @@
 .table th:first-child, .table td:first-child { padding-left: 0; }
 .table th:last-child, .table td:last-child { padding-right: 0; }
 .table td strong { display: block; font-weight: 600; }
-.cellCaption { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; }
+.cellCaption { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; }
 .cellTruncate { max-width: 220px; }
 .cellTruncate .truncate,
 .cellTruncate strong.truncate {
@@ -132,12 +125,12 @@
   border-radius: var(--radius-full);
   background: var(--sage-pale);
   color: var(--ink);
-  font-size: 10px;
+  font-size: 12px;
 }
-.statusRequested, .statusWaiting { background: #f9e4d9; color: #8f4331; }
-.statusInConsultation { background: #d9e5dc; }
-.statusCompleted { background: #e5eee5; color: #3f5a4c; }
-.statusCancelled, .statusRejected { background: #ece5e1; color: #6b5249; }
+.statusRequested, .statusWaiting { background: var(--coral-pale); color: var(--coral-deep); }
+.statusInConsultation { background: var(--sage); }
+.statusCompleted { background: var(--sage-mist); color: var(--sage-ink); }
+.statusCancelled, .statusRejected { background: var(--clay-pale); color: var(--clay-ink); }
 
 .empty {
   min-height: 250px;
@@ -166,8 +159,8 @@
   margin: -35px 0 28px;
   padding: 14px 18px;
   border-radius: var(--radius-md);
-  background: #f9e4d9;
-  color: #8f4331;
+  background: var(--coral-pale);
+  color: var(--coral-deep);
   font: 13px/1.5 var(--font-sans);
 }
 
@@ -185,13 +178,13 @@
   color: var(--ink);
   font: 12px var(--font-sans);
 }
-.statusConfirmed { background: #dfe7f2; color: #3d5474; }
+.statusConfirmed { background: var(--blue-pale); color: var(--blue-ink); }
 .deleteButton {
   padding: 7px 11px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--paper);
-  color: #8f4331;
+  color: var(--coral-deep);
   font: 12px var(--font-sans);
   cursor: pointer;
 }

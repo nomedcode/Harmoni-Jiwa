@@ -15,10 +15,8 @@
 .navLinks {
   display: flex;
   gap: 30px;
-  color: #4c6660;
+  color: var(--nav-ink);
   font: 600 0.8125rem var(--font-sans);
-  letter-spacing: .06em;
-  text-transform: uppercase;
 }
 .navLinks a {
   min-height: 44px;

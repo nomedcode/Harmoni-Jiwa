@@ -43,7 +43,7 @@
   border-radius: 220px 220px 0 0;
   z-index: -1;
 }
-.sun { position: absolute; top: 12%; right: 12%; width: 130px; height: 130px; border-radius: 50%; background: #e9a179; }
+.sun { position: absolute; top: 12%; right: 12%; width: 130px; height: 130px; border-radius: 50%; background: var(--sun); }
 .arch { position: absolute; left: 26%; bottom: 0; width: 34%; height: 68%; background: var(--coral); border-radius: 200px 200px 0 0; opacity: .88; }
 .plant {
   position: absolute;
@@ -120,7 +120,7 @@
   color: var(--ink);
   white-space: nowrap;
 }
-.chipText span { display: block; font-size: 11px; color: var(--muted); white-space: nowrap; }
+.chipText span { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; }
 .chipMessage { bottom: 20px; left: 20px; }
 .chipAvatar {
   width: 30px;
@@ -130,7 +130,7 @@
   color: var(--paper);
   display: grid;
   place-items: center;
-  font: 11px var(--font-sans);
+  font: 12px var(--font-sans);
   flex-shrink: 0;
 }
 .chipTrust { bottom: 20px; right: 20px; gap: 10px; }

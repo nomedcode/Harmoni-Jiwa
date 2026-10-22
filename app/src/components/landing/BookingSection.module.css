@@ -42,9 +42,7 @@
   justify-content: space-between;
   margin-bottom: 26px;
   color: var(--coral-text);
-  font: 11px var(--font-sans);
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  font: 12px var(--font-sans);
 }
 .formHeader strong { color: var(--ink); font-weight: 400; }
 .formRow { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }

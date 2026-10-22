@@ -1,7 +1,7 @@
 .section { padding: var(--sec-pad) 0; }
 .head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
 .head h2 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); line-height: 1.2; letter-spacing: -.015em; }
-.dim { color: #6f8279; font-weight: 400; }
+.dim { color: var(--dim); font-weight: 400; }
 
 .bento {
   display: grid;

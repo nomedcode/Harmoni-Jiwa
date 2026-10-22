@@ -45,8 +45,6 @@
   align-items: center;
   gap: 10px;
   font: 600 0.8125rem var(--font-sans);
-  letter-spacing: .06em;
-  text-transform: uppercase;
   color: var(--coral-text);
   cursor: pointer;
 }
