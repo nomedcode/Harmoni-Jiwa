@@ -14,7 +14,7 @@ export function SiteHeader() {
   return (
     <header className={styles.header}>
       <div className={`wrap ${styles.inner}`}>
-    <a className="brand" href="#top" aria-label="Harmoni Jiwa, halaman utama">
+        <a className="brand" href="#top" aria-label="Harmoni Jiwa, halaman utama">
           <img className="brand-mark" src="/logo.svg" alt="" aria-hidden="true" />
           <span>{site.shortBrand.first}<br /><em>{site.shortBrand.second}</em></span>
         </a>
@@ -24,6 +24,9 @@ export function SiteHeader() {
         <div className={styles.actions}>
           {isStaff && (
             <Link className="header-cta" href="/karyawan/dashboard">Dashboard</Link>
+          )}
+          {session && !isStaff && (
+            <Link className={`secondary-button ${styles.secondaryAction}`} href="/janji-saya">Janji saya</Link>
           )}
           {session ? (
             <button className="header-cta" type="button" onClick={() => void signOut()}>Keluar</button>
@@ -55,10 +58,11 @@ export function SiteHeader() {
         {navLinks.map((link) => (
           <a key={link.href} href={link.href} onClick={closeMenu}>{link.label}</a>
         ))}
+        {session && !isStaff && <Link href="/janji-saya" onClick={closeMenu}>Janji saya</Link>}
         <div className={styles.mobileActions}>
-          <a className="primary-button" href="#booking" onClick={closeMenu}>
+          <Link className="primary-button" href="/booking" onClick={closeMenu}>
             Mulai konsultasi
-          </a>
+          </Link>
         </div>
       </nav>
     </header>

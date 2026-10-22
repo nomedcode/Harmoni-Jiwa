@@ -16,7 +16,6 @@
   text-align: left;
   hanging-punctuation: first;
 }
-.row h2 i { color: var(--coral-text); font-style: normal; }
 .row p {
   flex: 1 1 260px;
   max-width: 55ch;

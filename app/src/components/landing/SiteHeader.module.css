@@ -26,6 +26,7 @@
 }
 .navLinks a:hover { color: var(--coral-text); }
 .actions { display: flex; align-items: center; gap: 12px; }
+.secondaryAction { padding: 12px 18px; }
 
 .menuToggle {
   display: none;
@@ -79,4 +80,7 @@
 @media (max-width: 960px) {
   .navLinks { display: none; }
   .menuToggle { display: flex; }
+}
+@media (max-width: 560px) {
+  .secondaryAction { display: none; }
 }

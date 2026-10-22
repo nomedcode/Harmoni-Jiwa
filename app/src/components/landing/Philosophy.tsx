@@ -6,7 +6,7 @@ export function Philosophy() {
     <section className={`wrap ${styles.section}`} id="tentang" aria-labelledby="philosophy-title">
       <div className={styles.row}>
         <h2 id="philosophy-title">
-          “Tidak harus selalu kuat.<br /><i>Kamu hanya perlu mulai bercerita.</i>”
+          “Tidak harus selalu kuat.<br />Kamu hanya perlu mulai bercerita.”
         </h2>
         <p>
           Kami membangun praktik ini dengan satu keyakinan: perawatan yang terasa manusiawi. Tenang,

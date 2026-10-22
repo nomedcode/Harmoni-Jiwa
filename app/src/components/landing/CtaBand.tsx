@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "./CtaBand.module.css";
 
 export function CtaBand() {
@@ -6,7 +7,7 @@ export function CtaBand() {
       <div className={styles.band}>
         <h2 id="cta-title">Siap untuk merasa didampingi?</h2>
         <p>Jadwal tersedia minggu ini. Tidak perlu rujukan untuk pasien baru.</p>
-        <a className="primary-button" href="#booking">Mulai konsultasi</a>
+        <Link className="primary-button" href="/booking">Mulai konsultasi</Link>
       </div>
     </section>
   );

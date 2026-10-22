@@ -2,7 +2,7 @@
 
 export type Stat = { value: string; label: string };
 export type Service = { key: string; title: string; text: string };
-export type Reason = { badge: string; title: string; text: string };
+export type Reason = { title: string; text: string };
 export type Testimonial = { quote: string; name: string; date: string };
 export type OfficeHour = { day: string; time: string };
 
@@ -31,10 +31,10 @@ export const services: Service[] = [
 ];
 
 export const whyUs: Reason[] = [
-  { badge: "01", title: "Pendekatan yang hangat", text: "Kami mengikuti kecepatanmu. Tidak ada paksaan, tidak ada penilaian." },
-  { badge: "02", title: "Waktu kamu berarti", text: "Sesi tepat waktu. Jika kami terlambat lebih dari 10 menit, kami akan memberitahumu." },
-  { badge: "03", title: "Jadwal fleksibel", text: "Buka Senin—Sabtu, termasuk sesi malam untuk yang bekerja penuh waktu." },
-  { badge: "04", title: "Konsultasi daring", text: "Sesi video call tersedia bagi yang belum siap datang langsung." },
+  { title: "Pendekatan yang hangat", text: "Kami mengikuti kecepatanmu. Tidak ada paksaan, tidak ada penilaian." },
+  { title: "Waktu kamu berarti", text: "Sesi tepat waktu. Jika kami terlambat lebih dari 10 menit, kami akan memberitahumu." },
+  { title: "Jadwal fleksibel", text: "Buka Senin—Sabtu, termasuk sesi malam untuk yang bekerja penuh waktu." },
+  { title: "Konsultasi daring", text: "Sesi video call tersedia bagi yang belum siap datang langsung." },
 ];
 
 export const testimonials: Testimonial[] = [

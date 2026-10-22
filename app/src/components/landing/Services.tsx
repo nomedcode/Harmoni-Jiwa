@@ -1,27 +1,32 @@
+import Link from "next/link";
 import { services } from "@/content/landing";
 import styles from "./Services.module.css";
 
 export function Services() {
+  const [lead, ...rest] = services;
+
   return (
     <section className={`wrap ${styles.section}`} id="layanan" aria-labelledby="services-title">
       <div className={styles.head}>
-        <h2 id="services-title">Ruang untuk</h2>
-        <h2 className={styles.dim} aria-hidden="true">/</h2>
-        <h2 className={styles.dim}>menjadi lebih baik</h2>
+        <h2 id="services-title">Ruang untuk menjadi lebih baik</h2>
+        <p>Tiga jenis sesi. Kalau belum yakin yang mana, mulai dari konsultasi awal.</p>
       </div>
-      <div className={styles.bento}>
-        {services.map((service, index) => (
-          <a
-            className={`${styles.card} ${index === 0 ? styles.cardTall : ""}`}
-            href="#booking"
-            key={service.key}
-          >
-            <div>
-              <h3>{service.title}</h3>
-              <p className={styles.sub}>{service.text}</p>
-            </div>
-          </a>
-        ))}
+      <div className={styles.layout}>
+        <Link className={styles.lead} href="/booking">
+          <h3>{lead.title}</h3>
+          <p>{lead.text}</p>
+          <span className={styles.leadAction}>Buat janji</span>
+        </Link>
+        <ul className={styles.rest}>
+          {rest.map((service) => (
+            <li key={service.key}>
+              <Link className={styles.row} href="/booking">
+                <h3>{service.title}</h3>
+                <p>{service.text}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
