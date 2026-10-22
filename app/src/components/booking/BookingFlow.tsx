@@ -152,7 +152,7 @@ function BookingSteps({ now }: { now: ClinicMoment }) {
         </div>
       </fieldset>
 
-      <fieldset className={styles.step}>
+      <fieldset className={styles.doctorStep}>
         <legend className={styles.stepTitle}><span aria-hidden="true">2</span>Pilih psikiater</legend>
         {employees.length === 0 ? (
           <p className="form-hint">Memuat daftar psikiater… Jika daftar tidak muncul, muat ulang halaman.</p>
