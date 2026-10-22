@@ -1,5 +1,6 @@
 import { officeHours } from "@/content/landing";
 import { BookingForm } from "./BookingForm";
+import { OpenStatus } from "./OpenStatus";
 import styles from "./BookingSection.module.css";
 
 export function BookingSection() {
@@ -10,7 +11,7 @@ export function BookingSection() {
         <div className={styles.hoursCard}>
           <div className={styles.hoursHead}>
             <h3>Jam operasional</h3>
-            <span className={styles.openBadge}>Buka hari ini</span>
+            <OpenStatus />
           </div>
           <dl>
             {officeHours.map((item) => (

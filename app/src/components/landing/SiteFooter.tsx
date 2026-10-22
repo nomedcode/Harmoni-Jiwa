@@ -1,3 +1,4 @@
+import { services } from "@/content/landing";
 import { site } from "@/content/site";
 import styles from "./SiteFooter.module.css";
 
@@ -6,13 +7,6 @@ const quickLinks = [
   { href: "#tentang", label: "Tentang" },
   { href: "#layanan", label: "Layanan" },
   { href: "#booking", label: "Booking" },
-];
-
-const serviceLinks = [
-  "Konsultasi awal",
-  "Kecemasan & mood",
-  "Konsultasi remaja",
-  "Konsultasi darurat",
 ];
 
 export function SiteFooter() {
@@ -32,7 +26,7 @@ export function SiteFooter() {
           </nav>
           <nav className={styles.col} aria-label="Layanan">
             <h3 className={styles.colTitle}>Layanan</h3>
-            {serviceLinks.map((label) => <a key={label} href="#layanan">{label}</a>)}
+            {services.map((service) => <a key={service.key} href="#layanan">{service.title}</a>)}
           </nav>
           <div className={styles.col}>
             <h3 className={styles.colTitle}>Kunjungi kami</h3>

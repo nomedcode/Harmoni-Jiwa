@@ -1,8 +1,7 @@
 /** Static copy for the landing page sections. No runtime data lives here. */
 
 export type Stat = { value: string; label: string };
-export type Service = { key: string; size: "tall" | "normal"; title: string; text: string };
-export type SecondaryService = { title: string; sub: string; tone: "dark" | "sage" };
+export type Service = { key: string; title: string; text: string };
 export type Reason = { badge: string; title: string; text: string };
 export type Testimonial = { quote: string; name: string; date: string };
 export type OfficeHour = { day: string; time: string };
@@ -16,33 +15,19 @@ export const stats: Stat[] = [
 export const services: Service[] = [
   {
     key: "awal",
-    size: "tall",
     title: "Konsultasi awal",
     text: "Ruang tenang untuk memahami apa yang sedang kamu alami dan menentukan langkah pertama.",
   },
   {
     key: "cemas",
-    size: "tall",
     title: "Kecemasan & mood",
     text: "Pendampingan terarah untuk kecemasan, depresi, burnout, dan perubahan suasana hati.",
   },
   {
     key: "remaja",
-    size: "normal",
     title: "Konsultasi remaja",
     text: "Pendekatan hangat untuk remaja dan keluarga yang ingin saling memahami.",
   },
-  {
-    key: "pasangan",
-    size: "normal",
-    title: "Konsultasi pasangan",
-    text: "Mediasi terarah untuk komunikasi yang lebih sehat antara pasangan.",
-  },
-];
-
-export const secondaryServices: SecondaryService[] = [
-  { title: "Konsultasi darurat", sub: "Slot hari yang sama, hubungi kami dulu", tone: "dark" },
-  { title: "Pendampingan lanjutan", sub: "Sesi rutin untuk pemulihan jangka panjang", tone: "sage" },
 ];
 
 export const whyUs: Reason[] = [
@@ -73,4 +58,4 @@ export const officeHours: OfficeHour[] = [
 export const schedules = ["09:00", "10:30", "13:00", "14:30", "16:00"];
 
 /** Service options offered by the booking form. */
-export const bookingServices = ["Konsultasi awal", "Kecemasan & mood", "Konsultasi remaja"];
+export const bookingServices = services.map((service) => service.title);

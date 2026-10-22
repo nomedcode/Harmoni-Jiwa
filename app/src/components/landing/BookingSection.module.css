@@ -16,14 +16,6 @@
 }
 .hoursHead { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; }
 .hoursHead h3 { font-size: 1.35rem; line-height: 1.3; letter-spacing: -.01em; }
-.openBadge {
-  background: var(--coral-text);
-  color: var(--paper);
-  border-radius: var(--radius-full);
-  padding: 5px 13px;
-  font: 500 0.8125rem var(--font-sans);
-  letter-spacing: .01em;
-}
 .hoursRow {
   display: flex;
   justify-content: space-between;

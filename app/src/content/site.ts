@@ -13,6 +13,8 @@ export const site = {
     "Klinik psikiatri personal untuk konsultasi yang aman, profesional, dan manusiawi.",
   locale: "id-ID",
   language: "id",
+  /** Office hours and booking slots are clinic wall-clock time. */
+  timeZone: "Asia/Jakarta",
   email: "john.doe@klinik.com",
   city: "Jakarta Selatan",
   region: "DKI Jakarta",
