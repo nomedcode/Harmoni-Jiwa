@@ -2,14 +2,19 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
   gap: clamp(32px, 5vw, 72px);
-  align-items: end;
+  align-items: stretch;
   padding: clamp(40px, 7vw, 88px) 0 var(--sec-pad);
 }
-.copy { padding-bottom: clamp(0px, 3vw, 32px); }
+.copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(0px, 3vw, 32px) 0;
+}
 .title {
   max-width: 11ch;
-  font-size: clamp(2.6rem, 5.6vw, 4.6rem);
-  line-height: 1.04;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  line-height: 1.02;
   letter-spacing: -.025em;
   overflow-wrap: anywhere;
 }
@@ -24,21 +29,20 @@
 .media {
   position: relative;
   width: 100%;
-  min-height: 420px;
-  aspect-ratio: 5/4;
+  min-height: 480px;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: var(--sage);
+  background: var(--ink);
   isolation: isolate;
 }
 .media::before {
   content: "";
   position: absolute;
   inset: 40px 48px 0;
-  border: 1px solid var(--muted);
+  border: 1px solid var(--on-dark);
   border-bottom: 0;
   border-radius: 220px 220px 0 0;
-  opacity: .25;
+  opacity: .45;
   z-index: -1;
 }
 .sun { position: absolute; top: 12%; right: 12%; width: 120px; height: 120px; border-radius: 50%; background: var(--sun); }
@@ -49,7 +53,7 @@
   bottom: 0;
   width: 12px;
   height: 46%;
-  background: var(--ink);
+  background: var(--on-dark);
   transform: rotate(8deg);
   transform-origin: bottom;
 }
@@ -59,7 +63,7 @@
   width: 74px;
   height: 20px;
   border-radius: 100% 0;
-  background: var(--ink);
+  background: var(--on-dark);
 }
 .plant::before { top: 24px; left: -60px; transform: rotate(-28deg); }
 .plant::after { top: 78px; left: -4px; transform: rotate(20deg); }
@@ -69,7 +73,7 @@
   bottom: 0;
   width: 100px;
   height: 90px;
-  border: 7px solid var(--ink);
+  border: 7px solid var(--paper);
   border-bottom: 0;
   border-radius: 50px 50px 0 0;
 }
@@ -117,10 +121,10 @@
 @media (max-width: 899px) {
   .hero { grid-template-columns: 1fr; align-items: start; }
   .copy { padding-bottom: 0; }
-  .media { min-height: 320px; aspect-ratio: 4/3; }
+  .media { min-height: 340px; }
 }
 @media (max-width: 560px) {
   .actions { flex-direction: column; align-items: stretch; }
   .actions a { justify-content: center; }
-  .media { aspect-ratio: 4/5; min-height: 340px; }
+  .media { min-height: 380px; }
 }

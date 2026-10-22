@@ -72,12 +72,13 @@
   height: var(--topbar-h);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 16px;
   padding: 0 clamp(20px, 4vw, 40px);
   background: var(--paper);
   border-bottom: 1px solid var(--border);
 }
+.title { color: var(--ink); font: 600 15px var(--font-sans); letter-spacing: -.01em; }
 .who { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .user {
   overflow: hidden;

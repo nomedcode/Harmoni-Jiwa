@@ -61,6 +61,7 @@ export function AppShell({ variant, userLabel, roleLabel, onSignOut, children }:
       </nav>
       <div className={styles.body}>
         <header className={styles.topbar}>
+          <span className={styles.title}>Harmoni Jiwa</span>
           <div className={styles.who}>
             {userLabel && <span className={styles.user}>{userLabel}</span>}
             {roleLabel && <span className={styles.role}>{roleLabel}</span>}
