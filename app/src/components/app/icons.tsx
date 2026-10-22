@@ -72,3 +72,7 @@ export function ChevronIcon({ direction = "right", ...props }: IconProps & { dir
 export function CheckIcon(props: IconProps) {
   return <Icon {...props}><path d="M5 12.5 10 17l9-10" /></Icon>;
 }
+
+export function SearchIcon(props: IconProps) {
+  return <Icon {...props}><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4.5 4.5" /></Icon>;
+}

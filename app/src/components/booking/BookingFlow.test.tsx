@@ -68,6 +68,24 @@ describe("BookingFlow", () => {
     expect(screen.getByText(/Memuat daftar psikiater/)).toBeInTheDocument();
   });
 
+  it("filters psychiatrists by name and shows the chosen one in the detail panel", async () => {
+    authState.session = { access_token: "token-123" };
+    authState.employees = doctors;
+    const user = setup();
+    render(<BookingFlow />);
+
+    await user.type(screen.getByRole("searchbox", { name: "Cari psikiater" }), "rina");
+    expect(screen.queryByRole("radio", { name: /dr\. John Doe/ })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("radio", { name: /dr\. Rina/ }));
+    expect(screen.getByRole("complementary", { name: "Detail psikiater" }))
+      .toHaveTextContent("dr. Rina Maharani Kusumawardhani Prameswari, Sp.KJ");
+
+    await user.clear(screen.getByRole("searchbox", { name: "Cari psikiater" }));
+    await user.type(screen.getByRole("searchbox", { name: "Cari psikiater" }), "xyz");
+    expect(screen.queryByRole("radio")).not.toBeInTheDocument();
+    expect(screen.getByText("Tidak ada psikiater dengan nama “xyz”.")).toBeInTheDocument();
+  });
+
   it("marks slots that already passed today and refuses to submit them", async () => {
     authState.session = { access_token: "token-123" };
     authState.employees = [doctors[0]];

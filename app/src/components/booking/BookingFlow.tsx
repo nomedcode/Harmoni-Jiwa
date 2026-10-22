@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useMemo, useState, type FormEvent } from "react";
-import { CheckIcon } from "@/components/app/icons";
+import { CheckIcon, SearchIcon } from "@/components/app/icons";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { bookingServices, schedules } from "@/content/landing";
+import { site } from "@/content/site";
 import { useClinicNow } from "@/hooks/useClinicNow";
 import { ApiError, createAppointment, formatApiError } from "@/lib/api";
 import { clinicMoment, SESSION_MINUTES, slotState, type ClinicMoment, type SlotState } from "@/lib/office-hours";
@@ -29,6 +30,7 @@ export function BookingFlow() {
 function BookingSteps({ now }: { now: ClinicMoment }) {
   const { session, employees, openModal } = useAuth();
   const [doctorId, setDoctorId] = useState<number | null>(null);
+  const [query, setQuery] = useState("");
   const [pickedDate, setPickedDate] = useState<string | null>(null);
   const [pick, setPick] = useState<{ date: string; time: string } | null>(null);
   const [error, setError] = useState("");
@@ -40,6 +42,10 @@ function BookingSteps({ now }: { now: ClinicMoment }) {
   const time = pick?.date === date ? pick.time : "";
   const chosenDoctorId = doctorId ?? (employees.length === 1 ? employees[0].id : null);
   const doctor = employees.find((employee) => employee.id === chosenDoctorId);
+  const needle = query.trim().toLocaleLowerCase(site.locale);
+  const visibleDoctors = needle
+    ? employees.filter((employee) => employee.full_name.toLocaleLowerCase(site.locale).includes(needle))
+    : employees;
   const dayLabel = dayLabelFormat.format(new Date(`${date}T00:00:00Z`));
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -110,34 +116,8 @@ function BookingSteps({ now }: { now: ClinicMoment }) {
 
   return (
     <form className={styles.flow} onSubmit={handleSubmit} aria-describedby="booking-error">
-      <fieldset className={styles.step}>
-        <legend className={styles.stepTitle}><span aria-hidden="true">1</span>Pilih psikiater</legend>
-        {employees.length === 0 ? (
-          <p className="form-hint">Memuat daftar psikiater… Jika daftar tidak muncul, muat ulang halaman.</p>
-        ) : (
-          <div className={styles.doctors}>
-            {employees.map((employee) => (
-              <label className={styles.doctor} key={employee.id}>
-                <input
-                  type="radio"
-                  name="employee_id"
-                  value={employee.id}
-                  checked={employee.id === chosenDoctorId}
-                  onChange={() => setDoctorId(employee.id)}
-                />
-                <span className={styles.avatar} aria-hidden="true">{initials(employee.full_name)}</span>
-                <span className={styles.doctorText}>
-                  <strong>{employee.full_name}</strong>
-                  <span>{roleLabel(employee.role)}</span>
-                </span>
-              </label>
-            ))}
-          </div>
-        )}
-      </fieldset>
-
       <fieldset className={`${styles.step} ${styles.timeStep}`}>
-        <legend className={styles.stepTitle}><span aria-hidden="true">2</span>Pilih tanggal dan jam</legend>
+        <legend className={styles.stepTitle}><span aria-hidden="true">1</span>Pilih tanggal dan jam</legend>
         <div className={styles.timePanel}>
           <ScheduleCalendar now={now} selectedDate={date} onSelect={setPickedDate} />
           <div className={styles.slots}>
@@ -172,7 +152,68 @@ function BookingSteps({ now }: { now: ClinicMoment }) {
         </div>
       </fieldset>
 
-      <div className={styles.lower}>
+      <fieldset className={styles.step}>
+        <legend className={styles.stepTitle}><span aria-hidden="true">2</span>Pilih psikiater</legend>
+        {employees.length === 0 ? (
+          <p className="form-hint">Memuat daftar psikiater… Jika daftar tidak muncul, muat ulang halaman.</p>
+        ) : (
+          <>
+            <label className={styles.search} htmlFor="doctor-search">
+              <span className="visually-hidden">Cari psikiater</span>
+              <SearchIcon className={styles.searchIcon} width={18} height={18} />
+              <input
+                id="doctor-search"
+                type="search"
+                placeholder="Cari nama psikiater"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                autoComplete="off"
+              />
+            </label>
+            {visibleDoctors.length === 0 && (
+              <p className="form-hint">Tidak ada psikiater dengan nama “{query.trim()}”.</p>
+            )}
+            <div className={styles.doctors}>
+              {visibleDoctors.map((employee) => (
+                <label className={styles.doctor} key={employee.id}>
+                  <input
+                    type="radio"
+                    name="employee_id"
+                    value={employee.id}
+                    checked={employee.id === chosenDoctorId}
+                    onChange={() => setDoctorId(employee.id)}
+                  />
+                  <span className={styles.avatar} aria-hidden="true">{initials(employee.full_name)}</span>
+                  <span className={styles.doctorText}>
+                    <strong>{employee.full_name}</strong>
+                    <span>{roleLabel(employee.role)}</span>
+                  </span>
+                  <span className={styles.pickLabel} aria-hidden="true">
+                    {employee.id === chosenDoctorId ? <><CheckIcon width={16} height={16} />Dipilih</> : "Pilih"}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </>
+        )}
+      </fieldset>
+
+      <aside className={styles.detail} aria-labelledby="detail-title">
+        <h2 id="detail-title">Detail psikiater</h2>
+        {doctor ? (
+          <div className={styles.profile}>
+            <span className={styles.portrait} aria-hidden="true">{initials(doctor.full_name)}</span>
+            <p className={styles.profileName}>{doctor.full_name}</p>
+            <p className={styles.profileRole}>{roleLabel(doctor.role)}</p>
+          </div>
+        ) : (
+          <p className={styles.profileEmpty}>Pilih psikiater dari daftar untuk melihat detail dan melanjutkan.</p>
+        )}
+        <dl className={styles.summary}>
+          <div><dt>Tanggal</dt><dd>{dayLabel}</dd></div>
+          <div><dt>Jam</dt><dd>{time ? `${time} WIB, ${SESSION_MINUTES} menit` : "Belum dipilih"}</dd></div>
+        </dl>
+
         <fieldset className={styles.step}>
           <legend className={styles.stepTitle}><span aria-hidden="true">3</span>Data diri</legend>
           <div className={styles.fields}>
@@ -212,25 +253,17 @@ function BookingSteps({ now }: { now: ClinicMoment }) {
           </div>
         </fieldset>
 
-        <aside className={styles.summary} aria-labelledby="summary-title">
-          <h2 id="summary-title">Ringkasan</h2>
-          <dl>
-            <div><dt>Psikiater</dt><dd>{doctor ? `${doctor.full_name}, ${roleLabel(doctor.role)}` : "Belum dipilih"}</dd></div>
-            <div><dt>Tanggal</dt><dd>{dayLabel}</dd></div>
-            <div><dt>Jam</dt><dd>{time ? `${time} WIB, ${SESSION_MINUTES} menit` : "Belum dipilih"}</dd></div>
-          </dl>
-          <label className={styles.consent} htmlFor="booking-consent">
-            <input id="booking-consent" type="checkbox" required />
-            <span>Saya setuju menerima konfirmasi jadwal melalui WhatsApp.</span>
-          </label>
-          <div id="booking-error" role="alert" aria-live="assertive">
-            {error && <p className="form-error">{error}</p>}
-          </div>
-          <button className="primary-button form-submit" type="submit" disabled={submitting}>
-            {submitting ? "Mengirim…" : "Kirim permintaan"}
-          </button>
-        </aside>
-      </div>
+        <label className={styles.consent} htmlFor="booking-consent">
+          <input id="booking-consent" type="checkbox" required />
+          <span>Saya setuju menerima konfirmasi jadwal melalui WhatsApp.</span>
+        </label>
+        <div id="booking-error" role="alert" aria-live="assertive">
+          {error && <p className="form-error">{error}</p>}
+        </div>
+        <button className="primary-button form-submit" type="submit" disabled={submitting}>
+          {submitting ? "Mengirim…" : "Kirim permintaan"}
+        </button>
+      </aside>
     </form>
   );
 }

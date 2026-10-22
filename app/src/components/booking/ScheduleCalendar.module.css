@@ -1,6 +1,6 @@
 .calendar { min-width: 0; }
 .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
-.month { font-size: clamp(1.25rem, 2.2vw, 1.6rem); line-height: 1.25; text-transform: capitalize; }
+.month { font-size: 1.25rem; line-height: 1.25; text-transform: capitalize; }
 .monthNav { display: flex; gap: 6px; }
 .monthNav button {
   display: grid;
