@@ -1,5 +1,6 @@
 import { services } from "@/content/landing";
 import { site } from "@/content/site";
+import { Reveal } from "./Reveal";
 import styles from "./SiteFooter.module.css";
 
 const quickLinks = [
@@ -12,6 +13,15 @@ const quickLinks = [
 export function SiteFooter() {
   return (
     <footer className={styles.footer}>
+      <div className={`wrap ${styles.contact}`}>
+        <Reveal>
+          <h2 className={styles.contactTitle}>Kami siap mendengarkan.</h2>
+          <p className={styles.contactText}>
+            Ada pertanyaan atau sudah siap memulai? Hubungi kami dengan cara yang paling nyaman untukmu.
+          </p>
+          <a className={styles.contactEmail} href={`mailto:${site.email}`}>{site.email}</a>
+        </Reveal>
+      </div>
       <div className={`wrap ${styles.top}`}>
         <div className={styles.brandBlock}>
           <span className="brand">
@@ -31,8 +41,8 @@ export function SiteFooter() {
           <div className={styles.col}>
             <h3 className={styles.colTitle}>Kunjungi kami</h3>
             <span>{site.city}, Indonesia</span>
-            <a href={`mailto:${site.email}`}>{site.email}</a>
             <span>Senin—Sabtu</span>
+            <span>Waktu Jakarta (WIB)</span>
           </div>
         </div>
       </div>

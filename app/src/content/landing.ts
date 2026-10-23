@@ -5,6 +5,7 @@ export type Service = { key: string; title: string; text: string };
 export type Reason = { title: string; text: string };
 export type Testimonial = { quote: string; name: string; date: string };
 export type OfficeHour = { day: string; time: string };
+export type Faq = { question: string; answer: string };
 
 export const stats: Stat[] = [
   { value: "Sejak 2019", label: "Menemani warga Jakarta bercerita" },
@@ -56,6 +57,34 @@ export const officeHours: OfficeHour[] = [
 
 /** Bookable consultation start times, in clinic local time. */
 export const schedules = ["09:00", "10:30", "13:00", "14:30", "16:00"];
+
+/** Static FAQ copy. Answers must stay consistent with real booking behaviour. */
+export const faqs: Faq[] = [
+  {
+    question: "Bagaimana cara membuat janji?",
+    answer:
+      "Buka halaman Buat janji, pilih psikiater, tanggal, dan jam yang tersedia, lalu kirim permintaan. Tim kami mengonfirmasi jadwal lewat WhatsApp.",
+  },
+  {
+    question: "Apakah informasi saya privat?",
+    answer:
+      "Ya. Data konsultasi hanya digunakan untuk keperluan perawatan dan dilindungi kerahasiaan medis.",
+  },
+  {
+    question: "Bisakah saya memilih psikiater sendiri?",
+    answer:
+      "Bisa. Di halaman Buat janji kamu bebas memilih psikiater yang tersedia.",
+  },
+  {
+    question: "Apakah ada sesi daring?",
+    answer:
+      "Ada. Sesi video call tersedia bagi yang belum siap datang langsung ke klinik.",
+  },
+  {
+    question: "Berapa lama satu sesi?",
+    answer: "Satu sesi konsultasi berlangsung 60 menit.",
+  },
+];
 
 /** Service options offered by the booking form. */
 export const bookingServices = services.map((service) => service.title);

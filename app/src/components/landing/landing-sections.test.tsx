@@ -18,6 +18,8 @@ import { SiteFooter } from "@/components/landing/SiteFooter";
 import { officeHours, services, stats, testimonials, whyUs } from "@/content/landing";
 import { doctor } from "@/content/site";
 import { BookingSection } from "@/components/landing/BookingSection";
+import { Faq } from "@/components/landing/Faq";
+import { faqs } from "@/content/landing";
 
 describe("Hero", () => {
   it("renders one level-1 heading and the primary booking action", () => {
@@ -116,6 +118,16 @@ describe("BookingSection", () => {
     render(<BookingSection />);
     officeHours.forEach((entry) => {
       expect(screen.getByText(entry.day)).toBeInTheDocument();
+    });
+  });
+});
+
+describe("Faq", () => {
+  it("renders every question from the content module", () => {
+    render(<Faq />);
+    faqs.forEach((faq) => {
+      expect(screen.getByText(faq.question)).toBeInTheDocument();
+      expect(screen.getByText(faq.answer)).toBeInTheDocument();
     });
   });
 });

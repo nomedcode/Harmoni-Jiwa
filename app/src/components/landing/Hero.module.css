@@ -57,6 +57,7 @@
   width: 2px;
   height: 18%;
   background: var(--on-dark);
+  animation: heroFloat 7s ease-in-out infinite alternate-reverse;
 }
 .lamp::after {
   content: "";
@@ -69,7 +70,7 @@
   border-radius: 100px 100px 24px 24px;
   background: var(--sun);
 }
-.sun { position: absolute; top: 10%; right: 10%; width: 74px; height: 74px; border-radius: 50%; background: var(--sun); }
+.sun { position: absolute; top: 10%; right: 10%; width: 74px; height: 74px; border-radius: 50%; background: var(--sun); animation: heroFloat 9s ease-in-out infinite alternate; }
 .arch { position: absolute; left: 24%; bottom: 0; width: 34%; height: 62%; background: var(--coral); border-radius: 200px 200px 0 0; }
 .plant {
   position: absolute;
@@ -100,6 +101,11 @@
   border: 6px solid var(--paper);
   border-bottom: 0;
   border-radius: 50px 50px 0 0;
+}
+
+@keyframes heroFloat {
+  from { transform: translateY(0); }
+  to { transform: translateY(-8px); }
 }
 
 /* Hours card */

@@ -9,6 +9,7 @@ import { Philosophy } from "@/components/landing/Philosophy";
 import { Services } from "@/components/landing/Services";
 import { SiteFooter } from "@/components/landing/SiteFooter";
 import { Testimonials } from "@/components/landing/Testimonials";
+import { Faq } from "@/components/landing/Faq";
 import { WhyUs } from "@/components/landing/WhyUs";
 import { clinicStructuredData, serializeJsonLd } from "@/lib/structured-data";
 
@@ -27,6 +28,7 @@ export default function Home() {
           <Doctor />
           <WhyUs />
           <Testimonials />
+          <Faq />
           <BookingSection />
           <CtaBand />
         </main>

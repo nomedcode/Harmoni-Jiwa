@@ -91,6 +91,14 @@ p { margin: 0; line-height: 1.65; }
   }
 }
 
+/* ---------- SCROLL REVEAL (calm, slow drift) ---------- */
+[data-reveal] {
+  transition: opacity .8s cubic-bezier(.22, .61, .36, 1), transform .8s cubic-bezier(.22, .61, .36, 1);
+  will-change: opacity, transform;
+}
+[data-reveal="hidden"] { opacity: 0; transform: translateY(16px); }
+[data-reveal="visible"] { opacity: 1; transform: none; }
+
 /* ---------- LAYOUT ---------- */
 .wrap {
   width: min(var(--maxw), calc(100% - 64px));
