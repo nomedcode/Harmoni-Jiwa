@@ -1,0 +1,99 @@
+.page {
+  min-height: 100dvh;
+  background: var(--paper);
+}
+
+/* ---------- HORIZONTAL NAVBAR ---------- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+}
+.inner {
+  width: min(1240px, 100%);
+  height: 68px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 40px);
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font: 600 17px var(--font-sans);
+  letter-spacing: -.01em;
+  white-space: nowrap;
+}
+.brand img { flex-shrink: 0; width: 32px; height: 32px; }
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 26px);
+  margin-left: auto;
+}
+.nav a {
+  color: var(--ink);
+  font: 500 14px var(--font-sans);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color .15s ease;
+}
+.nav a:hover { color: var(--coral-text); }
+.nav a:focus-visible { outline: 2px solid var(--coral); outline-offset: 4px; border-radius: 2px; }
+
+/* ---------- ACTIONS ---------- */
+.actions { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.user {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+  color: var(--ink);
+  font: 500 14px var(--font-sans);
+}
+.appLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--muted);
+  border-radius: var(--radius-full);
+  color: var(--ink);
+  font: 500 14px var(--font-sans);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .15s ease;
+}
+.appLink:hover { background: var(--sage-pale); }
+.appLink:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+.signOut {
+  flex-shrink: 0;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 14px;
+  border: 1px solid var(--muted);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--ink);
+  font: 500 14px var(--font-sans);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s ease;
+}
+.signOut:hover { background: var(--sage-pale); }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 959px) {
+  .nav { display: none; }
+  .actions { margin-left: auto; }
+}
+@media (max-width: 560px) {
+  .user { display: none; }
+}

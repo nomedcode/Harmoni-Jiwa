@@ -19,7 +19,6 @@ const navItems: Record<AppShellVariant, NavItem[]> = {
   ],
   staff: [
     { href: "/karyawan/dashboard", label: "Dashboard", Icon: DashboardIcon },
-    { href: "/", label: "Beranda", Icon: HomeIcon },
   ],
 };
 

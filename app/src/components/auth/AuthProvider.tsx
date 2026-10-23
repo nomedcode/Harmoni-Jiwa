@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [notice, setNotice] = useState("");
   const [pendingEmail, setPendingEmail] = useState("");
 
-  const syncProfile = useCallback(async (nextSession: Session) => {
+  const syncProfile = useCallback(async (nextSession: Session, redirectToDashboard = false) => {
     try {
       const response = await syncProfileRequest({
         full_name:
@@ -75,7 +75,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }, nextSession.access_token);
       const nextRole: AuthRole = response.data.role ?? "patient";
       setRole(nextRole);
-      if (nextRole === "karyawan" || nextRole === "admin") router.push("/karyawan/dashboard");
+      // Only a fresh sign-in jumps staff straight to the dashboard; restoring
+      // an existing session must never bounce the user off the public pages.
+      if (redirectToDashboard && (nextRole === "karyawan" || nextRole === "admin")) {
+        router.push("/karyawan/dashboard");
+      }
     } catch (syncError) {
       console.error("Unable to sync the Supabase profile with Laravel.", syncError);
       setError(syncError instanceof ApiError && syncError.status === 401
@@ -160,7 +164,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
     const { data: listener } = authClient.auth.onAuthStateChange((event, nextSession) => {
       setSession(nextSession);
-      if (nextSession && event !== "TOKEN_REFRESHED") void syncProfile(nextSession);
+      if (nextSession && event === "SIGNED_IN") void syncProfile(nextSession, true);
+      else if (nextSession && event !== "TOKEN_REFRESHED") void syncProfile(nextSession);
       else if (!nextSession) setRole("patient");
     });
 
