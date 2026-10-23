@@ -25,6 +25,8 @@ export type AuthMode = "login" | "register";
 
 type AuthContextValue = {
   session: Session | null;
+  /** False until the stored session has been restored or confirmed absent. */
+  ready: boolean;
   role: AuthRole;
   isStaff: boolean;
   /** Psychiatrists available for booking. Empty until the patient signs in. */
@@ -56,6 +58,7 @@ function isInvalidRefreshToken(error: unknown): boolean {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
+  const [ready, setReady] = useState(() => !supabase);
   const [role, setRole] = useState<AuthRole>("patient");
   const [employees, setEmployees] = useState<ApiEmployee[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -64,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [notice, setNotice] = useState("");
   const [pendingEmail, setPendingEmail] = useState("");
 
-  const syncProfile = useCallback(async (nextSession: Session) => {
+  const syncProfile = useCallback(async (nextSession: Session, redirectToDashboard = false) => {
     try {
       const response = await syncProfileRequest({
         full_name:
@@ -72,7 +75,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }, nextSession.access_token);
       const nextRole: AuthRole = response.data.role ?? "patient";
       setRole(nextRole);
-      if (nextRole === "karyawan" || nextRole === "admin") router.push("/karyawan/dashboard");
+      // Only a fresh sign-in jumps staff straight to the dashboard; restoring
+      // an existing session must never bounce the user off the public pages.
+      if (redirectToDashboard && (nextRole === "karyawan" || nextRole === "admin")) {
+        router.push("/karyawan/dashboard");
+      }
     } catch (syncError) {
       console.error("Unable to sync the Supabase profile with Laravel.", syncError);
       setError(syncError instanceof ApiError && syncError.status === 401
@@ -152,10 +159,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       void syncProfile(activeSession);
     }
 
-    void restoreSession();
+    void restoreSession().finally(() => {
+      if (!cancelled) setReady(true);
+    });
     const { data: listener } = authClient.auth.onAuthStateChange((event, nextSession) => {
       setSession(nextSession);
-      if (nextSession && event !== "TOKEN_REFRESHED") void syncProfile(nextSession);
+      if (nextSession && event === "SIGNED_IN") void syncProfile(nextSession, true);
+      else if (nextSession && event !== "TOKEN_REFRESHED") void syncProfile(nextSession);
       else if (!nextSession) setRole("patient");
     });
 
@@ -251,6 +261,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<AuthContextValue>(() => ({
     session,
+    ready,
     role,
     isStaff: Boolean(session) && (role === "karyawan" || role === "admin"),
     employees: session ? employees : [],
@@ -268,7 +279,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signOut,
     resendVerification,
   }), [
-    session, role, employees, modalOpen, mode, error, notice, pendingEmail,
+    session, ready, role, employees, modalOpen, mode, error, notice, pendingEmail,
     openModal, closeModal, changeMode, signIn, signUp, signOut, resendVerification,
   ]);
 

@@ -39,7 +39,6 @@ export function AuthModal() {
         <button className={styles.close} type="button" onClick={closeModal} aria-label="Tutup dialog akun">
           <span aria-hidden="true">×</span>
         </button>
-        <p className="eyebrow"><span /> Akun pasien</p>
         <h2 id="auth-title">{mode === "login" ? "Selamat datang kembali." : "Mulai dari sini."}</h2>
         <form onSubmit={handleSubmit} noValidate={false}>
           {mode === "register" && (

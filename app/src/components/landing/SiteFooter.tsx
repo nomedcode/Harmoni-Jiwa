@@ -1,4 +1,6 @@
+import { services } from "@/content/landing";
 import { site } from "@/content/site";
+import { Reveal } from "./Reveal";
 import styles from "./SiteFooter.module.css";
 
 const quickLinks = [
@@ -8,16 +10,18 @@ const quickLinks = [
   { href: "#booking", label: "Booking" },
 ];
 
-const serviceLinks = [
-  "Konsultasi awal",
-  "Kecemasan & mood",
-  "Konsultasi remaja",
-  "Konsultasi darurat",
-];
-
 export function SiteFooter() {
   return (
     <footer className={styles.footer}>
+      <div className={`wrap ${styles.contact}`}>
+        <Reveal>
+          <h2 className={styles.contactTitle}>Kami siap mendengarkan.</h2>
+          <p className={styles.contactText}>
+            Ada pertanyaan atau sudah siap memulai? Hubungi kami dengan cara yang paling nyaman untukmu.
+          </p>
+          <a className={styles.contactEmail} href={`mailto:${site.email}`}>{site.email}</a>
+        </Reveal>
+      </div>
       <div className={`wrap ${styles.top}`}>
         <div className={styles.brandBlock}>
           <span className="brand">
@@ -32,13 +36,13 @@ export function SiteFooter() {
           </nav>
           <nav className={styles.col} aria-label="Layanan">
             <h3 className={styles.colTitle}>Layanan</h3>
-            {serviceLinks.map((label) => <a key={label} href="#layanan">{label}</a>)}
+            {services.map((service) => <a key={service.key} href="#layanan">{service.title}</a>)}
           </nav>
           <div className={styles.col}>
             <h3 className={styles.colTitle}>Kunjungi kami</h3>
             <span>{site.city}, Indonesia</span>
-            <a href={`mailto:${site.email}`}>{site.email}</a>
             <span>Senin—Sabtu</span>
+            <span>Waktu Jakarta (WIB)</span>
           </div>
         </div>
       </div>

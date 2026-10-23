@@ -1,0 +1,15 @@
+.skeleton { display: grid; gap: 14px; max-width: 720px; }
+.bar, .block { display: block; border-radius: var(--radius-xs); background: var(--sage-pale); }
+.bar { height: 28px; width: 60%; }
+.barShort { height: 16px; width: 40%; }
+.block { height: 320px; margin-top: 12px; border-radius: var(--radius-md); }
+
+.gate {
+  max-width: 560px;
+  padding: clamp(28px, 5vw, 44px);
+  border-radius: var(--radius-md);
+  background: var(--sage-pale);
+}
+.gate h1 { font-size: clamp(1.6rem, 3vw, 2rem); line-height: 1.2; margin-bottom: 12px; }
+.gate p { color: var(--muted); max-width: 46ch; }
+.gateActions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }

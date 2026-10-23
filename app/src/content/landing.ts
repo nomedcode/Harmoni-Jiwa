@@ -1,11 +1,11 @@
 /** Static copy for the landing page sections. No runtime data lives here. */
 
 export type Stat = { value: string; label: string };
-export type Service = { key: string; size: "tall" | "normal"; title: string; text: string };
-export type SecondaryService = { title: string; sub: string; tone: "dark" | "sage" };
-export type Reason = { badge: string; title: string; text: string };
+export type Service = { key: string; title: string; text: string };
+export type Reason = { title: string; text: string };
 export type Testimonial = { quote: string; name: string; date: string };
 export type OfficeHour = { day: string; time: string };
+export type Faq = { question: string; answer: string };
 
 export const stats: Stat[] = [
   { value: "Sejak 2019", label: "Menemani warga Jakarta bercerita" },
@@ -16,40 +16,26 @@ export const stats: Stat[] = [
 export const services: Service[] = [
   {
     key: "awal",
-    size: "tall",
     title: "Konsultasi awal",
     text: "Ruang tenang untuk memahami apa yang sedang kamu alami dan menentukan langkah pertama.",
   },
   {
     key: "cemas",
-    size: "tall",
     title: "Kecemasan & mood",
     text: "Pendampingan terarah untuk kecemasan, depresi, burnout, dan perubahan suasana hati.",
   },
   {
     key: "remaja",
-    size: "normal",
     title: "Konsultasi remaja",
     text: "Pendekatan hangat untuk remaja dan keluarga yang ingin saling memahami.",
   },
-  {
-    key: "pasangan",
-    size: "normal",
-    title: "Konsultasi pasangan",
-    text: "Mediasi terarah untuk komunikasi yang lebih sehat antara pasangan.",
-  },
-];
-
-export const secondaryServices: SecondaryService[] = [
-  { title: "Konsultasi darurat", sub: "Slot hari yang sama, hubungi kami dulu", tone: "dark" },
-  { title: "Pendampingan lanjutan", sub: "Sesi rutin untuk pemulihan jangka panjang", tone: "sage" },
 ];
 
 export const whyUs: Reason[] = [
-  { badge: "01", title: "Pendekatan yang hangat", text: "Kami mengikuti kecepatanmu. Tidak ada paksaan, tidak ada penilaian." },
-  { badge: "02", title: "Waktu kamu berarti", text: "Sesi tepat waktu. Jika kami terlambat lebih dari 10 menit, kami akan memberitahumu." },
-  { badge: "03", title: "Jadwal fleksibel", text: "Buka Senin—Sabtu, termasuk sesi malam untuk yang bekerja penuh waktu." },
-  { badge: "04", title: "Konsultasi daring", text: "Sesi video call tersedia bagi yang belum siap datang langsung." },
+  { title: "Pendekatan yang hangat", text: "Kami mengikuti kecepatanmu. Tidak ada paksaan, tidak ada penilaian." },
+  { title: "Waktu kamu berarti", text: "Sesi tepat waktu. Jika kami terlambat lebih dari 10 menit, kami akan memberitahumu." },
+  { title: "Jadwal fleksibel", text: "Buka Senin—Sabtu, termasuk sesi malam untuk yang bekerja penuh waktu." },
+  { title: "Konsultasi daring", text: "Sesi video call tersedia bagi yang belum siap datang langsung." },
 ];
 
 export const testimonials: Testimonial[] = [
@@ -72,5 +58,33 @@ export const officeHours: OfficeHour[] = [
 /** Bookable consultation start times, in clinic local time. */
 export const schedules = ["09:00", "10:30", "13:00", "14:30", "16:00"];
 
+/** Static FAQ copy. Answers must stay consistent with real booking behaviour. */
+export const faqs: Faq[] = [
+  {
+    question: "Bagaimana cara membuat janji?",
+    answer:
+      "Buka halaman Buat janji, pilih psikiater, tanggal, dan jam yang tersedia, lalu kirim permintaan. Tim kami mengonfirmasi jadwal lewat WhatsApp.",
+  },
+  {
+    question: "Apakah informasi saya privat?",
+    answer:
+      "Ya. Data konsultasi hanya digunakan untuk keperluan perawatan dan dilindungi kerahasiaan medis.",
+  },
+  {
+    question: "Bisakah saya memilih psikiater sendiri?",
+    answer:
+      "Bisa. Di halaman Buat janji kamu bebas memilih psikiater yang tersedia.",
+  },
+  {
+    question: "Apakah ada sesi daring?",
+    answer:
+      "Ada. Sesi video call tersedia bagi yang belum siap datang langsung ke klinik.",
+  },
+  {
+    question: "Berapa lama satu sesi?",
+    answer: "Satu sesi konsultasi berlangsung 60 menit.",
+  },
+];
+
 /** Service options offered by the booking form. */
-export const bookingServices = ["Konsultasi awal", "Kecemasan & mood", "Konsultasi remaja"];
+export const bookingServices = services.map((service) => service.title);

@@ -1,10 +1,35 @@
-.footer { padding: 56px 0 40px; border-top: 1px solid var(--border); }
+.footer { border-top: 1px solid var(--border); }
+.contact {
+  padding: clamp(40px, 7vw, 88px) 0 clamp(32px, 5vw, 56px);
+}
+.contact > div {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+}
+.contactTitle {
+  font-size: clamp(1.9rem, 3.8vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -.02em;
+}
+.contactText { max-width: 46ch; color: var(--muted); }
+.contactEmail {
+  margin-top: 8px;
+  padding: 14px 26px;
+  border: 1px solid var(--muted);
+  border-radius: var(--radius-full);
+  color: var(--ink);
+  font: 600 15px var(--font-sans);
+  transition: background .2s ease, color .2s ease;
+}
+.contactEmail:hover { background: var(--ink); color: var(--paper); }
 .top {
   display: flex;
   justify-content: space-between;
   gap: 48px;
   flex-wrap: wrap;
-  padding-bottom: 40px;
+  padding: 32px 0 40px;
+  border-top: 1px solid var(--border);
 }
 .brandBlock {
   flex: 1 1 240px;
@@ -26,8 +51,6 @@
   margin: 0;
   color: var(--ink);
   font: 600 13px var(--font-sans);
-  letter-spacing: .08em;
-  text-transform: uppercase;
 }
 .col a, .col span { font: 14px var(--font-sans); color: var(--ink); }
 .col a { transition: color .15s ease; }

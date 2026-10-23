@@ -18,6 +18,8 @@ import { SiteFooter } from "@/components/landing/SiteFooter";
 import { officeHours, services, stats, testimonials, whyUs } from "@/content/landing";
 import { doctor } from "@/content/site";
 import { BookingSection } from "@/components/landing/BookingSection";
+import { Faq } from "@/components/landing/Faq";
+import { faqs } from "@/content/landing";
 
 describe("Hero", () => {
   it("renders one level-1 heading and the primary booking action", () => {
@@ -86,15 +88,17 @@ describe("CtaBand", () => {
 });
 
 describe("SiteFooter", () => {
-  it("does not render eyebrow labels on main landing sections", () => {
+  it("renders section eyebrow labels in sentence case, never uppercase spaced", () => {
     const { container: servicesContainer } = render(<Services />);
-    expect(servicesContainer.querySelector(".eyebrow")).toBeNull();
+    const eyebrow = servicesContainer.querySelector('[class*="eyebrow"]');
+    expect(eyebrow).not.toBeNull();
+    expect(eyebrow?.textContent).not.toMatch(/[A-Z]{2,}/);
 
     const { container: ctaContainer } = render(<CtaBand />);
-    expect(ctaContainer.querySelector(".eyebrow")).toBeNull();
+    expect(ctaContainer.querySelector('[class*="eyebrow"]')).toBeNull();
 
     const { container: footerContainer } = render(<SiteFooter />);
-    expect(footerContainer.querySelector(".eyebrow, .eyebrow-plain")).toBeNull();
+    expect(footerContainer.querySelector('[class*="eyebrow"]')).toBeNull();
   });
 
   it("renders Harmoni Jiwa contact details without legal links", () => {
@@ -116,6 +120,16 @@ describe("BookingSection", () => {
     render(<BookingSection />);
     officeHours.forEach((entry) => {
       expect(screen.getByText(entry.day)).toBeInTheDocument();
+    });
+  });
+});
+
+describe("Faq", () => {
+  it("renders every question from the content module", () => {
+    render(<Faq />);
+    faqs.forEach((faq) => {
+      expect(screen.getByText(faq.question)).toBeInTheDocument();
+      expect(screen.getByText(faq.answer)).toBeInTheDocument();
     });
   });
 });

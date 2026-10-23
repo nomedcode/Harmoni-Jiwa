@@ -1,13 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Session } from "@supabase/supabase-js";
 import {
   ApiError,
   deleteAppointment,
   formatApiError,
+  listQueues,
   listStaffAppointments,
   syncProfile,
   updateAppointmentStatus,
@@ -16,7 +16,9 @@ import {
   type AuthRole,
 } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
-import { site } from "@/content/site";
+import { AppShell } from "@/components/app/AppShell";
+import { useClinicNow } from "@/hooks/useClinicNow";
+import { clinicMoment, formatClinicSchedule, scheduleDate } from "@/lib/office-hours";
 import styles from "./dashboard.module.css";
 
 type StaffAppointment = ApiAppointment & {
@@ -32,6 +34,12 @@ type StaffAppointment = ApiAppointment & {
   };
   employee?: { full_name?: string; role?: string };
   queue?: { status?: string };
+};
+
+type ActiveQueue = {
+  id?: number;
+  status?: string;
+  appointment?: StaffAppointment;
 };
 
 type StatusFilter = "all" | "requested" | "confirmed" | "in_consultation" | "completed" | "cancelled" | "rejected";
@@ -60,16 +68,6 @@ function isStaffRole(role: unknown): role is Exclude<AuthRole, "patient"> {
   return role === "karyawan" || role === "admin";
 }
 
-function formatSchedule(value?: string): string {
-  if (!value) return "Jadwal belum tersedia";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat(site.locale, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(date);
-}
-
 function statusFor(appointment: StaffAppointment): string {
   // Appointment status is the single source of truth; the queue row mirrors it
   // (kept in sync by the backend) and is only exposed via GET /queues.
@@ -90,6 +88,19 @@ export default function EmployeeDashboard() {
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [queues, setQueues] = useState<ActiveQueue[] | null>(null);
+  const [queueError, setQueueError] = useState("");
+  const now = useClinicNow();
+
+  const loadQueues = useCallback(async (accessToken: string) => {
+    try {
+      const result = await listQueues(accessToken);
+      setQueues(result.data as ActiveQueue[]);
+      setQueueError("");
+    } catch (queueFailure) {
+      setQueueError(formatApiError(queueFailure));
+    }
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -128,6 +139,7 @@ export default function EmployeeDashboard() {
           return;
         }
         if (active) setRole(nextRole);
+        void loadQueues(activeSession.access_token);
 
         const result = await listStaffAppointments(activeSession.access_token, page);
         if (!active) return;
@@ -151,7 +163,7 @@ export default function EmployeeDashboard() {
     return () => {
       active = false;
     };
-  }, [page, router]);
+  }, [page, router, loadQueues]);
 
   const filteredAppointments = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -166,11 +178,18 @@ export default function EmployeeDashboard() {
     });
   }, [appointments, search, statusFilter]);
 
-  const todayCount = appointments.filter((appointment) => {
-    if (!appointment.scheduled_at) return false;
-    const date = new Date(appointment.scheduled_at);
-    return date.toDateString() === new Date().toDateString();
-  }).length;
+  const today = now ? clinicMoment(now).date : null;
+  const todayCount = today
+    ? appointments.filter((appointment) => scheduleDate(appointment.scheduled_at) === today).length
+    : null;
+
+  const activeQueues = useMemo(
+    () =>
+      [...(queues ?? [])].sort((a, b) =>
+        (a.appointment?.scheduled_at ?? "").localeCompare(b.appointment?.scheduled_at ?? ""),
+      ),
+    [queues],
+  );
 
   async function signOut() {
     await supabase?.auth.signOut();
@@ -187,6 +206,7 @@ export default function EmployeeDashboard() {
       setAppointments((current) =>
         current.map((item) => (item.id === appointment.id ? { ...item, ...updated, id: appointment.id } : item)),
       );
+      void loadQueues(session.access_token);
     } catch (actionFailure) {
       setActionError(formatApiError(actionFailure));
     } finally {
@@ -196,14 +216,15 @@ export default function EmployeeDashboard() {
 
   async function removeAppointment(appointment: StaffAppointment) {
     if (!session?.access_token || !appointment.id || busyId) return;
-    const label = appointment.patient?.full_name ?? "appointment ini";
-    if (!window.confirm(`Hapus appointment ${label}? Tindakan ini permanen.`)) return;
+    const label = appointment.patient?.full_name ?? "pasien ini";
+    if (!window.confirm(`Hapus janji ${label}? Tindakan ini permanen.`)) return;
     setBusyId(appointment.id);
     setActionError("");
     try {
       await deleteAppointment(appointment.id, session.access_token);
       setAppointments((current) => current.filter((item) => item.id !== appointment.id));
       setTotal((current) => Math.max(0, current - 1));
+      void loadQueues(session.access_token);
     } catch (actionFailure) {
       setActionError(formatApiError(actionFailure));
     } finally {
@@ -211,182 +232,222 @@ export default function EmployeeDashboard() {
     }
   }
 
-  return (
-    <div className={styles.shell}>
-      <a className="skip-link" href="#staff-main">Lewati ke konten utama</a>
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link className="brand" href="/" aria-label="Kembali ke halaman utama">
-            <img className="brand-mark" src="/logo.svg" alt="" aria-hidden="true" />
-            <span>{site.shortBrand.first}<br /><em>{site.shortBrand.second}</em></span>
-          </Link>
-          <div className={styles.headerActions}>
-            <span className={styles.rolePill}>{role === "admin" ? "Admin klinik" : "Karyawan klinik"}</span>
-            <button className="header-cta" type="button" onClick={() => void signOut()}>Keluar</button>
-          </div>
-        </div>
-      </header>
+  const roleLabel = role ? (role === "admin" ? "Admin klinik" : "Karyawan klinik") : undefined;
 
-      <main className={styles.main} id="staff-main" tabIndex={-1}>
-        <section className={styles.hero} aria-labelledby="staff-title">
-          <h1 id="staff-title">Dashboard<br /><i>appointment pasien.</i></h1>
-          <dl className={styles.heroStats}>
-            <div className={styles.heroStat}>
-              <dt>Total appointment</dt>
-              <dd>{total}</dd>
+  return (
+    <AppShell
+      variant="staff"
+      userLabel={role ? session?.user.email : undefined}
+      roleLabel={roleLabel}
+      onSignOut={() => void signOut()}
+    >
+      <div className={styles.head}>
+        <h1>Janji pasien</h1>
+        <p>Konfirmasi permintaan baru, pantau antrean hari ini, dan perbarui status setelah sesi.</p>
+      </div>
+
+      <div role="alert" aria-live="assertive">
+        {(error || actionError) && <div className={styles.alert}>{actionError || error}</div>}
+      </div>
+
+      {!role ? (
+        !error && (
+          <div className={styles.skeleton} aria-busy="true">
+            <span className="visually-hidden">Memeriksa akses karyawan…</span>
+            <span className={styles.ghost} />
+            <span className={`${styles.ghost} ${styles.ghostTall}`} />
+          </div>
+        )
+      ) : (
+        <div className={styles.layout}>
+          <dl className={styles.stats}>
+            <div>
+              <dt>Total janji</dt>
+              <dd>{loading ? "–" : total}</dd>
             </div>
-            <div className={`${styles.heroStat} ${styles.heroStatAccent}`}>
+            <div>
               <dt>Jadwal hari ini</dt>
-              <dd>{todayCount}</dd>
+              <dd>{loading || todayCount === null ? "–" : todayCount}</dd>
             </div>
           </dl>
-        </section>
 
-        <div role="alert" aria-live="assertive">
-          {(error || actionError) && <div className={styles.alert}>{actionError || error}</div>}
-        </div>
-
-        <section className={styles.panel} aria-labelledby="appointment-title">
-          <div className={styles.panelHeading}>
-            <h2 id="appointment-title">Semua appointment</h2>
-          </div>
-          <div className={styles.toolbar}>
-            <label htmlFor="staff-search">
-              Cari pasien, nomor, atau layanan
-              <input
-                id="staff-search"
-                type="search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Ketik untuk mencari…"
-              />
-            </label>
-            <label htmlFor="staff-status">
-              Status
-              <select
-                id="staff-status"
-                value={statusFilter}
-                onChange={(event) => setStatusFilter(event.target.value as StatusFilter)}
-              >
-                <option value="all">Semua status</option>
-                <option value="requested">Menunggu konfirmasi</option>
-                <option value="confirmed">Dikonfirmasi</option>
-                <option value="in_consultation">Sedang konsultasi</option>
-                <option value="completed">Selesai</option>
-                <option value="cancelled">Dibatalkan</option>
-                <option value="rejected">Ditolak</option>
-              </select>
-            </label>
-          </div>
-
-          <div className={styles.tableWrap} aria-busy={loading}>
-            {loading ? (
-              <div className={styles.empty} role="status">
-                <span className={styles.loadingDot} aria-hidden="true">●</span>
-                <p>Memuat appointment pasien...</p>
+          <section className={styles.queue} aria-labelledby="queue-title">
+            <h2 id="queue-title">
+              Antrean aktif
+              {queues !== null && !queueError && <span className={styles.count}>{activeQueues.length}</span>}
+            </h2>
+            {queueError ? (
+              <div className={styles.queueNote}>
+                <p>Antrean belum bisa dimuat. {queueError}</p>
+                <button
+                  className="text-button"
+                  type="button"
+                  onClick={() => session && void loadQueues(session.access_token)}
+                >
+                  Coba lagi
+                </button>
               </div>
-            ) : filteredAppointments.length === 0 ? (
-              <div className={styles.empty}>
-                <span className={styles.emptyIcon} aria-hidden="true">—</span>
-                <h3>Belum ada appointment</h3>
-                <p>Coba ubah pencarian atau filter status.</p>
-              </div>
+            ) : queues === null ? (
+              <p className={styles.queueNote} aria-busy="true">Memuat antrean…</p>
+            ) : activeQueues.length === 0 ? (
+              <p className={styles.queueNote}>Belum ada pasien di antrean. Janji yang dikonfirmasi masuk ke sini.</p>
             ) : (
-              <table className={styles.table}>
-                <caption className="visually-hidden">
-                  {filteredAppointments.length} appointment, halaman {page} dari {lastPage}.
-                </caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Pasien</th>
-                    <th scope="col">Jadwal</th>
-                    <th scope="col">Layanan</th>
-                    <th scope="col">Dokter</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredAppointments.map((appointment) => {
-                    const status = statusFor(appointment);
-                    return (
-                      <tr key={appointment.id ?? `${appointment.scheduled_at}-${appointment.patient?.full_name}`}>
-                        <td className={styles.cellTruncate}>
-                          <strong className="truncate">{appointment.patient?.full_name ?? "Nama belum tersedia"}</strong>
-                          <span className={`${styles.cellCaption} truncate`}>
-                            {appointment.patient?.phone_number ?? "Nomor belum tersedia"}
-                          </span>
-                        </td>
-                        <td className={styles.cellTruncate}>
-                          <strong className="truncate">{formatSchedule(appointment.scheduled_at)}</strong>
-                        </td>
-                        <td className={styles.cellTruncate}><span className="truncate">{appointment.service_type ?? "—"}</span></td>
-                        <td className={styles.cellTruncate}><span className="truncate">{appointment.employee?.full_name ?? "—"}</span></td>
-                        <td>
-                          <span className={`${styles.status} ${statusStyles[status] ?? ""}`}>
-                            {statusLabels[status] ?? status}
-                          </span>
-                        </td>
-                        <td>
-                          <div className={styles.rowActions}>
-                            <select
-                              className={styles.statusSelect}
-                              aria-label={`Ubah status appointment ${appointment.patient?.full_name ?? ""}`}
-                              value={appointment.status ?? "requested"}
-                              disabled={busyId === appointment.id}
-                              onChange={(event) => void changeStatus(appointment, event.target.value as AppointmentStatus)}
-                            >
-                              {([
-                                "requested",
-                                "confirmed",
-                                "in_consultation",
-                                "completed",
-                                "cancelled",
-                                "rejected",
-                              ] as AppointmentStatus[]).map((value) => (
-                                <option key={value} value={value}>{statusLabels[value] ?? value}</option>
-                              ))}
-                            </select>
-                            <button
-                              className={styles.deleteButton}
-                              type="button"
-                              disabled={busyId === appointment.id}
-                              onClick={() => void removeAppointment(appointment)}
-                            >
-                              Hapus
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <ol className={styles.queueList}>
+                {activeQueues.map((queue) => (
+                  <li key={queue.id} data-status={queue.status}>
+                    <span className={styles.queueTime}>{formatClinicSchedule(queue.appointment?.scheduled_at, "time")}</span>
+                    <span className={styles.queueWho}>
+                      <strong>{queue.appointment?.patient?.full_name ?? "Nama belum tersedia"}</strong>
+                      <span>
+                        {formatClinicSchedule(queue.appointment?.scheduled_at, "date")}
+                        {queue.appointment?.employee?.full_name ? ` · ${queue.appointment.employee.full_name}` : ""}
+                      </span>
+                    </span>
+                    <span className={`${styles.status} ${statusStyles[queue.status ?? ""] ?? ""}`}>
+                      {statusLabels[queue.status ?? ""] ?? queue.status}
+                    </span>
+                  </li>
+                ))}
+              </ol>
             )}
-          </div>
-          <div className={styles.pagination}>
-            <span>{filteredAppointments.length} appointment · halaman {page} dari {lastPage}</span>
-            <div className={styles.paginationButtons}>
-              <button
-                className="secondary-button"
-                type="button"
-                disabled={page <= 1 || loading}
-                onClick={() => setPage((current) => Math.max(1, current - 1))}
-              >
-                <span aria-hidden="true">←</span> Sebelumnya
-              </button>
-              <button
-                className="primary-button"
-                type="button"
-                disabled={page >= lastPage || loading}
-                onClick={() => setPage((current) => Math.min(lastPage, current + 1))}
-              >
-                Berikutnya <span aria-hidden="true">→</span>
-              </button>
+          </section>
+
+          <section className={styles.panel} aria-labelledby="appointment-title">
+            <h2 id="appointment-title">Semua janji</h2>
+            <div className={styles.toolbar}>
+              <label htmlFor="staff-search">
+                Cari pasien, nomor, atau layanan
+                <input
+                  id="staff-search"
+                  type="search"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Ketik untuk mencari…"
+                />
+              </label>
+              <label htmlFor="staff-status">
+                Status
+                <select
+                  id="staff-status"
+                  value={statusFilter}
+                  onChange={(event) => setStatusFilter(event.target.value as StatusFilter)}
+                >
+                  <option value="all">Semua status</option>
+                  <option value="requested">Menunggu konfirmasi</option>
+                  <option value="confirmed">Dikonfirmasi</option>
+                  <option value="in_consultation">Sedang konsultasi</option>
+                  <option value="completed">Selesai</option>
+                  <option value="cancelled">Dibatalkan</option>
+                  <option value="rejected">Ditolak</option>
+                </select>
+              </label>
             </div>
-          </div>
-        </section>
-      </main>
-    </div>
+
+            <div className={styles.tableWrap} aria-busy={loading}>
+              {loading ? (
+                <div className={styles.empty} role="status">
+                  <p>Memuat janji pasien…</p>
+                </div>
+              ) : filteredAppointments.length === 0 ? (
+                <div className={styles.empty}>
+                  <h3>Belum ada janji</h3>
+                  <p>Coba ubah pencarian atau filter status.</p>
+                </div>
+              ) : (
+                <table className={styles.table}>
+                  <caption className="visually-hidden">
+                    {filteredAppointments.length} janji, halaman {page} dari {lastPage}.
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Pasien</th>
+                      <th scope="col">Jadwal</th>
+                      <th scope="col">Layanan</th>
+                      <th scope="col">Dokter</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredAppointments.map((appointment) => {
+                      const status = statusFor(appointment);
+                      return (
+                        <tr key={appointment.id ?? `${appointment.scheduled_at}-${appointment.patient?.full_name}`}>
+                          <td className={styles.cellPatient} data-label="Pasien">
+                            <strong>{appointment.patient?.full_name ?? "Nama belum tersedia"}</strong>
+                            <span className={styles.cellCaption}>
+                              {appointment.patient?.phone_number ?? "Nomor belum tersedia"}
+                            </span>
+                          </td>
+                          <td data-label="Jadwal">{formatClinicSchedule(appointment.scheduled_at)}</td>
+                          <td data-label="Layanan">{appointment.service_type ?? "—"}</td>
+                          <td data-label="Dokter">{appointment.employee?.full_name ?? "—"}</td>
+                          <td data-label="Status">
+                            <span className={`${styles.status} ${statusStyles[status] ?? ""}`}>
+                              {statusLabels[status] ?? status}
+                            </span>
+                          </td>
+                          <td data-label="Aksi">
+                            <div className={styles.rowActions}>
+                              <select
+                                className={styles.statusSelect}
+                                aria-label={`Ubah status janji ${appointment.patient?.full_name ?? ""}`}
+                                value={appointment.status ?? "requested"}
+                                disabled={busyId === appointment.id}
+                                onChange={(event) => void changeStatus(appointment, event.target.value as AppointmentStatus)}
+                              >
+                                {([
+                                  "requested",
+                                  "confirmed",
+                                  "in_consultation",
+                                  "completed",
+                                  "cancelled",
+                                  "rejected",
+                                ] as AppointmentStatus[]).map((value) => (
+                                  <option key={value} value={value}>{statusLabels[value] ?? value}</option>
+                                ))}
+                              </select>
+                              <button
+                                className={styles.deleteButton}
+                                type="button"
+                                disabled={busyId === appointment.id}
+                                onClick={() => void removeAppointment(appointment)}
+                              >
+                                Hapus
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
+            </div>
+            <div className={styles.pagination}>
+              <span>{filteredAppointments.length} janji · halaman {page} dari {lastPage}</span>
+              <div className={styles.paginationButtons}>
+                <button
+                  className="secondary-button"
+                  type="button"
+                  disabled={page <= 1 || loading}
+                  onClick={() => setPage((current) => Math.max(1, current - 1))}
+                >
+                  <span aria-hidden="true">←</span> Sebelumnya
+                </button>
+                <button
+                  className="secondary-button"
+                  type="button"
+                  disabled={page >= lastPage || loading}
+                  onClick={() => setPage((current) => Math.min(lastPage, current + 1))}
+                >
+                  Berikutnya <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
+    </AppShell>
   );
 }
