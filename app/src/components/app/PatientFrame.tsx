@@ -39,6 +39,7 @@ export function PatientFrame({ children }: { children: ReactNode }) {
       userLabel={session?.user.email}
       roleLabel={session ? (isStaff ? "Karyawan" : "Pasien") : undefined}
       onSignOut={session ? () => void signOut() : undefined}
+      onSignIn={session ? undefined : () => openModal()}
     >
       {content}
     </AppShell>

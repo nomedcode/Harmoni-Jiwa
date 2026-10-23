@@ -5,6 +5,12 @@ import styles from "./Hero.module.css";
 export function Hero() {
   return (
     <section className={styles.hero} aria-labelledby="hero-title">
+      <div className={styles.deco} aria-hidden="true">
+        <span className={styles.decoSun} />
+        <span className={styles.decoArch} />
+        <span className={styles.decoRing} />
+        <span className={styles.decoDot} />
+      </div>
       <Reveal>
         <p className={styles.eyebrow}>Selamat datang di Harmoni Jiwa</p>
         <h1 className={styles.title} id="hero-title">Kamu berhak merasa bahagia.</h1>

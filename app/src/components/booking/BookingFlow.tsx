@@ -154,6 +154,7 @@ function BookingSteps({ now }: { now: ClinicMoment }) {
 
       <fieldset className={styles.doctorStep}>
         <legend className={styles.stepTitle}><span aria-hidden="true">2</span>Pilih psikiater</legend>
+        <div className={styles.doctorPanel}>
         {employees.length === 0 ? (
           <p className="form-hint">Memuat daftar psikiater… Jika daftar tidak muncul, muat ulang halaman.</p>
         ) : (
@@ -196,6 +197,7 @@ function BookingSteps({ now }: { now: ClinicMoment }) {
             </div>
           </>
         )}
+        </div>
       </fieldset>
 
       <aside className={styles.detail} aria-labelledby="detail-title">

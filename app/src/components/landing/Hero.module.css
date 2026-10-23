@@ -1,4 +1,5 @@
 .hero {
+  position: relative;
   display: grid;
   justify-items: center;
   gap: clamp(36px, 6vw, 64px);
@@ -25,6 +26,57 @@
   font-size: 1.0625rem;
 }
 .actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+/* ---------- HERO DECOR (flat shapes, same visual language as the illustration) ---------- */
+.deco {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+.decoSun {
+  position: absolute;
+  top: 12%;
+  left: 6%;
+  width: clamp(60px, 8vw, 110px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--sun);
+  opacity: .55;
+  animation: heroFloat 10s ease-in-out infinite alternate;
+}
+.decoArch {
+  position: absolute;
+  bottom: -18%;
+  right: 5%;
+  width: clamp(140px, 18vw, 260px);
+  aspect-ratio: 1 / 1.4;
+  border: 1.5px solid var(--muted);
+  border-bottom: 0;
+  border-radius: 50% 50% 0 0;
+  opacity: .4;
+}
+.decoRing {
+  position: absolute;
+  top: 30%;
+  right: 14%;
+  width: clamp(40px, 5vw, 72px);
+  aspect-ratio: 1;
+  border: 1.5px solid var(--coral);
+  border-radius: 50%;
+  opacity: .5;
+}
+.decoDot {
+  position: absolute;
+  bottom: 24%;
+  left: 16%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--coral);
+  opacity: .5;
+}
 
 /* ---------- WIDE ILLUSTRATION BANNER ---------- */
 .media {

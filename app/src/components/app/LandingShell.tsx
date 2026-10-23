@@ -10,7 +10,7 @@ import { AppShell } from "./AppShell";
  * their email and a sign-out action in the topbar.
  */
 export function LandingShell({ children }: { children: ReactNode }) {
-  const { session, isStaff, signOut } = useAuth();
+  const { session, isStaff, openModal, signOut } = useAuth();
 
   return (
     <AppShell
@@ -18,6 +18,7 @@ export function LandingShell({ children }: { children: ReactNode }) {
       userLabel={session?.user.email}
       roleLabel={session ? (isStaff ? "Karyawan" : "Pasien") : undefined}
       onSignOut={session ? () => void signOut() : undefined}
+      onSignIn={session ? undefined : () => openModal()}
     >
       {children}
     </AppShell>

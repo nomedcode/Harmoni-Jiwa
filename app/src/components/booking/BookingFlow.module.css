@@ -31,12 +31,13 @@
 }
 
 /* ---------- DOCTORS ---------- */
-.doctorStep {
+.doctorPanel {
+  display: grid;
+  gap: 14px;
   padding: clamp(18px, 2.2vw, 24px);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--paper);
-  box-shadow: 0 2px 10px rgb(25 59 58 / .05);
 }
 .search {
   position: relative;
@@ -109,18 +110,14 @@
 .doctorText span { color: var(--muted); font: 13px var(--font-sans); }
 
 /* ---------- TIME PANEL (the one bold moment) ---------- */
-.timeStep {
-  padding: clamp(20px, 2.4vw, 28px);
-  border-radius: var(--radius-lg);
-  background: var(--ink);
-  color: var(--paper);
-}
-.timeStep .stepTitle { color: var(--paper); }
-.timeStep .stepTitle span { border-color: var(--on-dark); }
 .timePanel {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 28px clamp(24px, 4vw, 48px);
+  padding: clamp(20px, 2.4vw, 28px);
+  border-radius: var(--radius-lg);
+  background: var(--ink);
+  color: var(--paper);
 }
 .slots { display: flex; flex-direction: column; min-width: 0; }
 .slots h3 { font-size: 1.25rem; line-height: 1.3; }

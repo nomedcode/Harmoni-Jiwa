@@ -30,10 +30,12 @@ type AppShellProps = {
   /** Short role description shown next to the user label. */
   roleLabel?: string;
   onSignOut?: () => void;
+  /** Opened from the topbar when a visitor is not signed in. */
+  onSignIn?: () => void;
   children: ReactNode;
 };
 
-export function AppShell({ variant, userLabel, roleLabel, onSignOut, children }: AppShellProps) {
+export function AppShell({ variant, userLabel, roleLabel, onSignOut, onSignIn, children }: AppShellProps) {
   const pathname = usePathname();
 
   return (
@@ -70,6 +72,11 @@ export function AppShell({ variant, userLabel, roleLabel, onSignOut, children }:
             <button className={styles.signOut} type="button" onClick={onSignOut}>
               <SignOutIcon width={18} height={18} />
               Keluar
+            </button>
+          )}
+          {!onSignOut && onSignIn && (
+            <button className="header-cta" type="button" onClick={onSignIn}>
+              Masuk
             </button>
           )}
         </header>

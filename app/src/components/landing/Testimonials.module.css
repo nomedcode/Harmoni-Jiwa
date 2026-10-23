@@ -8,6 +8,7 @@
 .head h2 { font-size: clamp(1.9rem, 4vw, 3.2rem); line-height: 1.08; letter-spacing: -.02em; }
 .track {
   display: flex;
+  align-items: stretch;
   gap: var(--gap);
   overflow-x: auto;
   padding: 4px var(--pad) 16px;
@@ -20,9 +21,14 @@
 }
 .track::-webkit-scrollbar { height: 6px; }
 .track::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
-.card {
-  scroll-snap-align: start;
+.track > li {
   flex: 0 0 min(380px, 82vw);
+  display: flex;
+  scroll-snap-align: start;
+}
+.track > li > div { width: 100%; display: flex; }
+.card {
+  width: 100%;
   background: var(--sage-pale);
   border-radius: var(--radius-lg);
   padding: 28px;
