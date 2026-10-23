@@ -7,6 +7,11 @@
   flex-wrap: wrap;
 }
 .info { flex: 1 1 260px; }
+.eyebrow {
+  margin-bottom: 14px;
+  color: var(--coral-text);
+  font: 600 15px var(--font-sans);
+}
 .info h2 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); line-height: 1.2; letter-spacing: -.015em; margin-bottom: 20px; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
 .tags li {

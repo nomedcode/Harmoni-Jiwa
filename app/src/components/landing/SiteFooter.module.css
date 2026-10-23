@@ -1,9 +1,11 @@
 .footer { border-top: 1px solid var(--border); }
 .contact {
   padding: clamp(40px, 7vw, 88px) 0 clamp(32px, 5vw, 56px);
+}
+.contact > div {
   display: grid;
   justify-items: start;
-  gap: 14px;
+  gap: 16px;
 }
 .contactTitle {
   font-size: clamp(1.9rem, 3.8vw, 3rem);

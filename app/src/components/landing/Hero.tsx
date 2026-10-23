@@ -1,43 +1,37 @@
 import Link from "next/link";
-import { officeHours } from "@/content/landing";
-import { site } from "@/content/site";
+import { Reveal } from "./Reveal";
 import styles from "./Hero.module.css";
 
 export function Hero() {
   return (
     <section className={styles.hero} aria-labelledby="hero-title">
-      <div className={styles.copy}>
-        <h1 className={styles.title} id="hero-title">Tempat pulang untuk pikiranmu.</h1>
+      <Reveal>
+        <p className={styles.eyebrow}>Selamat datang di Harmoni Jiwa</p>
+        <h1 className={styles.title} id="hero-title">Kamu berhak merasa bahagia.</h1>
         <p className={styles.intro}>
-          Percakapan yang aman, profesional, dan manusiawi untuk membantu kamu menjalani hari dengan lebih ringan.
+          Dampingan yang profesional dan penuh empati, disesuaikan dengan perjalanan kesehatan mentalmu.
         </p>
         <div className={styles.actions}>
           <Link className="primary-button" href="/booking">Mulai konsultasi</Link>
           <a className="secondary-button" href="#dokter">Kenali dokter kami</a>
         </div>
-      </div>
-      <div className={styles.panel}>
+      </Reveal>
+      <Reveal delay={140}>
         <div className={styles.media} role="img" aria-label="Ilustrasi ruang konsultasi yang tenang">
           <div className={styles.lamp} />
           <div className={styles.sun} />
           <div className={styles.arch} />
           <div className={styles.plant} />
           <div className={styles.chair} />
+          <div className={`${styles.chip} ${styles.chipHere}`}>
+            <span className={styles.chipIcon} aria-hidden="true" />
+            <span className={styles.chipText}><strong>Kami di sini</strong><span>Jakarta Selatan</span></span>
+          </div>
+          <div className={`${styles.chip} ${styles.chipTrust}`}>
+            <span className={styles.trustLabel}>500+ pasien mempercayai kami</span>
+          </div>
         </div>
-        <div className={styles.hours}>
-          <h2 className={styles.hoursTitle}>Jam praktik</h2>
-          <dl className={styles.hoursList}>
-            {officeHours.map((entry) => (
-              <div key={entry.day}>
-                <dt>{entry.day}</dt>
-                <dd>{entry.time}</dd>
-              </div>
-            ))}
-          </dl>
-          <Link className="primary-button" href="/booking">Buat janji sekarang</Link>
-          <p className={styles.hoursNote}>Waktu klinik ({site.city}), konfirmasi lewat WhatsApp.</p>
-        </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

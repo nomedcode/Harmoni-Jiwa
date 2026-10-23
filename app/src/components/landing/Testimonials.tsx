@@ -6,7 +6,10 @@ export function Testimonials() {
   return (
     <section className={`wrap ${styles.section}`} id="ulasan" aria-labelledby="testimonials-title">
       <Reveal>
-        <h2 id="testimonials-title">Kata mereka yang sudah bercerita</h2>
+        <div className={styles.head}>
+          <p className={styles.eyebrow}>Ulasan</p>
+          <h2 id="testimonials-title">Kata mereka yang sudah bercerita</h2>
+        </div>
       </Reveal>
       <ul className={styles.track} tabIndex={0} aria-label="Daftar ulasan pasien">
         {testimonials.map((testimonial, index) => (

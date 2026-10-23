@@ -8,21 +8,20 @@ export function Services() {
     <section className={`wrap ${styles.section}`} id="layanan" aria-labelledby="services-title">
       <Reveal>
         <div className={styles.head}>
-          <h2 id="services-title">Ruang untuk menjadi lebih baik</h2>
-          <p>Tiga jenis sesi. Kalau belum yakin yang mana, mulai dari konsultasi awal.</p>
+          <p className={styles.eyebrow}>Layanan kami</p>
+          <h2 id="services-title">Cara kami mendampingi</h2>
+          <p>Perawatan kesehatan mental profesional yang disesuaikan dengan kebutuhan dan tujuanmu.</p>
         </div>
       </Reveal>
-      <ul className={styles.list}>
+      <ul className={styles.grid}>
         {services.map((service, index) => (
           <li key={service.key}>
-            <Reveal delay={index * 90}>
-              <Link className={styles.row} href="/booking">
+            <Reveal delay={index * 90} className={styles.cardWrap}>
+              <Link className={styles.card} href="/booking">
                 <span className={styles.marker} aria-hidden="true" />
-                <div className={styles.rowText}>
-                  <h3>{service.title}</h3>
-                  <p>{service.text}</p>
-                </div>
-                <span className={styles.rowAction} aria-hidden="true">Buat janji →</span>
+                <h3>{service.title}</h3>
+                <p>{service.text}</p>
+                <span className={styles.cardAction}>Buat janji →</span>
               </Link>
             </Reveal>
           </li>
